@@ -1,26 +1,63 @@
-import React, { useState } from 'react'
-import { Image, KeyboardAvoidingView, Pressable, SafeAreaView, Text, TextInput, View } from 'react-native'
-import { MaterialIcons } from "@expo/vector-icons";
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  Image,
+  Pressable,
+  KeyboardAvoidingView,
+  TextInput,
+  Alert
+} from "react-native";
+import React, { useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
-import { useRouter } from 'expo-router';
-export default function login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-    const [name,setName] = useState('')
-    const [image,setImage] = useState('')
+import { MaterialIcons } from "@expo/vector-icons";
+import { Entypo } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+// import axios from "axios"
 
+const register = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [image, setImage] = useState("");
   const router = useRouter();
+  const handleRegister = () => {
+      console.log("hello")
+      const user = {
+          name:name,
+          email:email,
+          password:password,
+          profileImage:image
+      }
+
+      // axios.post("http://localhost:3000/register",user).then((response) => {
+      //     console.log(response);
+      //     Alert.alert("Registration successful","You have been registered successfully");
+      //     setName("");
+      //     setEmail("");
+      //     setPassword("");
+      //     setImage("");
+      // }).catch((error) => {
+      //     Alert.alert("Registration failed","An error occurred while registering");
+      //     console.log("registration failed",error)
+      // });
+  }
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: "white", alignItems: "center" }}
     >
-      <Image
+      <View>
+        <Image
           style={{ width: 150, height: 100, resizeMode: "contain" }}
           source={{
             uri: "https://www.freepnglogos.com/uploads/linkedin-logo-transparent-png-25.png",
           }}
         />
-         <KeyboardAvoidingView>
+      </View>
+
+      <KeyboardAvoidingView>
         <View style={{ alignItems: "center" }}>
           <Text
             style={{
@@ -30,11 +67,41 @@ export default function login() {
               color: "#041E42",
             }}
           >
-            Log in to your Account
+            Register to your Account
           </Text>
         </View>
 
-        <View style={{ marginTop: 70 }}>
+        <View style={{ marginTop: 35 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 5,
+              backgroundColor: "#E0E0E0",
+              paddingVertical: 5,
+              borderRadius: 5,
+              marginTop: 30,
+            }}
+          >
+            <Ionicons
+              name="person"
+              size={24}
+              color="gray"
+              style={{ marginLeft: 8 }}
+            />
+            <TextInput
+              value={name}
+              onChangeText={(text) => setName(text)}
+              style={{
+                color: "gray",
+                marginVertical: 10,
+                width: 300,
+                fontSize: name ? 18 : 18,
+              }}
+              placeholder="enter your name"
+            />
+          </View>
+
           <View
             style={{
               flexDirection: "row",
@@ -53,19 +120,19 @@ export default function login() {
               color="gray"
             />
             <TextInput
-              value={name}
-              onChangeText={(text) => setName(text)}
+              value={email}
+              onChangeText={(text) => setEmail(text)}
               style={{
                 color: "gray",
                 marginVertical: 10,
                 width: 300,
-                fontSize: name ? 18 : 18,
+                fontSize: email ? 18 : 18,
               }}
-              placeholder="Enter your Name"
+              placeholder="enter your Email"
             />
           </View>
 
-          <View style={{ marginTop: 10 }}>
+
             <View
               style={{
                 flexDirection: "row",
@@ -91,12 +158,38 @@ export default function login() {
                   color: "gray",
                   marginVertical: 10,
                   width: 300,
-                  // fontSize: password ? 18 : 18,
+                  fontSize: password ? 18 : 18,
                 }}
                 placeholder="enter your Password"
               />
             </View>
+
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 5,
+              backgroundColor: "#E0E0E0",
+              paddingVertical: 5,
+              borderRadius: 5,
+              marginTop: 30,
+            }}
+          >
+            <Entypo name="image" size={24} color="gray" style={{marginLeft:8}} />
+            <TextInput
+              value={image}
+              onChangeText={(text) => setImage(text)}
+              style={{
+                color: "gray",
+                marginVertical: 10,
+                width: 300,
+                fontSize: image ? 18 : 18,
+              }}
+              placeholder="enter your image url"
+            />
           </View>
+
+        
 
           <View
             style={{
@@ -116,7 +209,7 @@ export default function login() {
           <View style={{ marginTop: 80 }} />
 
           <Pressable
-          // onPress={handleLogin}
+         onPress={handleRegister}
             style={{
               width: 200,
               backgroundColor: "#0072b1",
@@ -134,20 +227,24 @@ export default function login() {
                 fontWeight: "bold",
               }}
             >
-              Login
+              Register
             </Text>
           </Pressable>
 
           <Pressable
-            onPress={() => router.replace("/register")}
+            onPress={() => router.replace("/login")}
             style={{ marginTop: 15 }}
           >
             <Text style={{ textAlign: "center", color: "gray", fontSize: 16 }}>
-              Don't have an account? Sign Up
+              Already have an account? Sign up
             </Text>
           </Pressable>
         </View>
       </KeyboardAvoidingView>
-      </SafeAreaView>
-  )
-}
+    </SafeAreaView>
+  );
+};
+
+export default register;
+
+const styles = StyleSheet.create({});

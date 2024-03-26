@@ -3,10 +3,11 @@ import { Image, KeyboardAvoidingView, Pressable, SafeAreaView, Text, TextInput, 
 import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { useRouter } from 'expo-router';
-import { Ionicons } from "@expo/vector-icons";
 export default function login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+    const [name,setName] = useState('')
+    const [image,setImage] = useState('')
 
   const router = useRouter();
   return (
@@ -45,53 +46,25 @@ export default function login() {
               marginTop: 30,
             }}
           >
-            <Ionicons
-              name="person"
+            <MaterialIcons
+              style={{ marginLeft: 8 }}
+              name="email"
               size={24}
               color="gray"
-              style={{ marginLeft: 8 }}
             />
             <TextInput
-              value={email}
-              onChangeText={(text) => setEmail(text)}
+              value={name}
+              onChangeText={(text) => setName(text)}
               style={{
                 color: "gray",
                 marginVertical: 10,
                 width: 300,
-                fontSize: email ? 18 : 18,
+                fontSize: name ? 18 : 18,
               }}
-              placeholder="Enter your Email"
+              placeholder="Enter your Name"
             />
           </View>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 5,
-              backgroundColor: "#E0E0E0",
-              paddingVertical: 5,
-              borderRadius: 5,
-              marginTop: 30,
-            }}
-          >
-            <Ionicons
-              name="person"
-              size={24}
-              color="gray"
-              style={{ marginLeft: 8 }}
-            />
-            <TextInput
-              value={email}
-              onChangeText={(text) => setEmail(text)}
-              style={{
-                color: "gray",
-                marginVertical: 10,
-                width: 300,
-                fontSize: email ? 18 : 18,
-              }}
-              placeholder="Enter your Email"
-            />
-          </View>   
+
           <View style={{ marginTop: 10 }}>
             <View
               style={{
@@ -118,9 +91,9 @@ export default function login() {
                   color: "gray",
                   marginVertical: 10,
                   width: 300,
-                  fontSize: password ? 18 : 18,
+                  fontSize: password ? 18 : 18
                 }}
-                placeholder="enter your Password"
+                placeholder="Enter your Password"
               />
             </View>
           </View>
