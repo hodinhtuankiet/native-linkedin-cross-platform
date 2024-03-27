@@ -31,7 +31,6 @@ const register = () => {
           password:password,
           profileImage:image
       }
-
       // axios.post("http://localhost:3000/register",user).then((response) => {
       //     console.log(response);
       //     Alert.alert("Registration successful","You have been registered successfully");
@@ -188,9 +187,6 @@ const register = () => {
               placeholder="enter your image url"
             />
           </View>
-
-        
-
           <View
             style={{
               marginTop: 12,

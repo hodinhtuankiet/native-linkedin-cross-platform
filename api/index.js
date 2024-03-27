@@ -3,6 +3,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const crypto = require('crypto')
+import Authenticate_APIs from './route/authenticate'
 const nodemailer = require('nodemailer')
 const mongodb = require('./config/mongodb')
 const app = express()
@@ -17,6 +18,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Middleware này cho phép Express đọc dữ liệu được gửi dưới dạng JSON.
 // Nó giúp ứng dụng xử lý dữ liệu JSON được gửi từ client
 app.use(bodyParser.json());
+
+app.use('/authenticate', Authenticate_APIs)
 
 app.listen(port, () =>{
     console.log('server is running on port');
