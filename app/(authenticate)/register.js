@@ -15,7 +15,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from '@expo/vector-icons';
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-// import axios from "axios"
+import axios from "axios"
 
 const register = () => {
   const [email, setEmail] = useState("");
@@ -31,17 +31,17 @@ const register = () => {
           password:password,
           profileImage:image
       }
-      // axios.post("http://localhost:3000/register",user).then((response) => {
-      //     console.log(response);
-      //     Alert.alert("Registration successful","You have been registered successfully");
-      //     setName("");
-      //     setEmail("");
-      //     setPassword("");
-      //     setImage("");
-      // }).catch((error) => {
-      //     Alert.alert("Registration failed","An error occurred while registering");
-      //     console.log("registration failed",error)
-      // });
+      axios.post("http://localhost:3000/register", user).then((response) => {
+          console.log(response);
+          Alert.alert("Registration successful","You have been registered successfully");
+          setName("");
+          setEmail("");
+          setPassword("");
+          setImage("");
+      }).catch((error) => {
+          Alert.alert("Registration failed","An error occurred while registering");
+          console.log("registration failed",error)
+      });
   }
   return (
     <SafeAreaView
@@ -66,7 +66,7 @@ const register = () => {
               color: "#041E42",
             }}
           >
-            Register to your Account
+            Register to your Account hjhjk
           </Text>
         </View>
 

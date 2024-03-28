@@ -19,7 +19,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Nó giúp ứng dụng xử lý dữ liệu JSON được gửi từ client
 app.use(bodyParser.json());
 
-app.use('/authenticate', Authenticate_APIs)
+app.use('/', Authenticate_APIs)
+
+// app.use('/post', Authenticate_APIs)
 
 app.listen(port, () =>{
     console.log('server is running on port');

@@ -10,6 +10,19 @@ export default function login() {
     const [image,setImage] = useState('')
 
   const router = useRouter();
+  const handleLogin = () => {
+    const user = {
+        email: email,
+        password: password
+    }
+
+    // axios.post("http://localhost:3000/login", user).then((response) => {
+    //     console.log(response);
+    //     const token = response.data.token;
+    //     AsyncStorage.setItem("authToken",token);
+    //     router.replace("/(tabs)/home")
+    // })
+}
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: "white", alignItems: "center" }}
@@ -116,7 +129,7 @@ export default function login() {
           <View style={{ marginTop: 80 }} />
 
           <Pressable
-          // onPress={handleLogin}
+          onPress={handleLogin}
             style={{
               width: 200,
               backgroundColor: "#0072b1",
@@ -134,7 +147,7 @@ export default function login() {
                 fontWeight: "bold",
               }}
             >
-              Login
+              bin lol
             </Text>
           </Pressable>
 

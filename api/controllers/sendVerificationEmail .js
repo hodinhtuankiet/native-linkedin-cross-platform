@@ -1,12 +1,12 @@
 import { StatusCodes } from 'http-status-codes'
 import User from '../models/users'; 
 
-const sendVerificationEmail  = async (email, verificationToken) => {
+const sendVerifiEmail  = async (email, verificationToken) => {
     const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-          user: "sujananand0@gmail.com",
-          pass: "rnzcugnscqtqiefs",
+          user: "kiethdt.22ite@gmail.com",
+          pass: "ccmotjpzrpwpayja",
         },
       });
       const mailOptions = {
@@ -25,6 +25,6 @@ const sendVerificationEmail  = async (email, verificationToken) => {
       }
 }
 
-export const registerController = {
-  createNew
+export const sendVerificationEmail  = {
+    sendVerifiEmail 
 }

@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes'
 import User from '../models/users'; 
-
+import { sendVerificationEmail } from './sendVerificationEmail '; 
 const createNew = async (req, res, next ) => {
   try {
     // return json về Clients
