@@ -1,7 +1,6 @@
-import { StatusCodes } from 'http-status-codes'
-import User from '../models/users'; 
+import nodemailer from 'nodemailer';
 
-const sendVerifiEmail  = async (email, verificationToken) => {
+const sendVerificationEmail = async (email, verificationToken) => {
     const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -10,7 +9,7 @@ const sendVerifiEmail  = async (email, verificationToken) => {
         },
       });
       const mailOptions = {
-        from: "linkedin@gmail.com",
+        from: "hodinhtuankiet@gmail.com",
         to: email,
         subject: "Email Verification",
         text: `please click the following link to verify your email : http://localhost:3000/verify/${verificationToken}`,
@@ -21,10 +20,8 @@ const sendVerifiEmail  = async (email, verificationToken) => {
         await transporter.sendMail(mailOptions);
         console.log("Verification email sent successfully");
       } catch (error) {
-        console.log("Error sending the verification email");
+        console.log("Error sending the verification email" , error);
       }
-}
+};
 
-export const sendVerificationEmail  = {
-    sendVerifiEmail 
-}
+export default sendVerificationEmail;

@@ -1,39 +1,73 @@
-import React, { useState } from 'react'
-import { Image, KeyboardAvoidingView, Pressable, SafeAreaView, Text, TextInput, View } from 'react-native'
-import { MaterialIcons } from "@expo/vector-icons";
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  Image,
+  KeyboardAvoidingView,
+  TextInput,
+  Pressable,
+  Alert
+} from "react-native";
+import React, { useState,useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
-import { useRouter } from 'expo-router';
-export default function login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-    const [name,setName] = useState('')
-    const [image,setImage] = useState('')
+import { MaterialIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
+const login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
-  const handleLogin = () => {
-    const user = {
-        email: email,
-        password: password
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const token = await AsyncStorage.getItem("authToken");
+        if (token) {
+          router.replace("/(tab)/home");
+        }
+      } catch (error) {
+        console.error("Error while checking login status:", error);
+      }
     }
 
-    // axios.post("http://localhost:3000/login", user).then((response) => {
-    //     console.log(response);
-    //     const token = response.data.token;
-    //     AsyncStorage.setItem("authToken",token);
-    //     router.replace("/(tabs)/home")
-    // })
-}
+    checkLoginStatus();
+  }, []);
+
+  const handleLogin = async () => {
+    const user = {
+      email: email,
+      password: password
+    }
+
+    try {
+      const response = await axios.post("http://localhost:3000/login", user);
+      console.log("Login response:", response.data);
+      const token = response.data.token;
+      AsyncStorage.setItem("authToken", token);
+      router.replace("/(tab)/home");
+    } catch (error) {
+      console.error("Login failed:", error);
+      Alert.alert("Login failed", "An error occurred while logging in");
+    }
+  }
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: "white", alignItems: "center" }}
     >
-      <Image
+      <View>
+        <Image
           style={{ width: 150, height: 100, resizeMode: "contain" }}
           source={{
             uri: "https://www.freepnglogos.com/uploads/linkedin-logo-transparent-png-25.png",
           }}
         />
-         <KeyboardAvoidingView>
+      </View>
+
+      <KeyboardAvoidingView>
         <View style={{ alignItems: "center" }}>
           <Text
             style={{
@@ -66,15 +100,15 @@ export default function login() {
               color="gray"
             />
             <TextInput
-              value={name}
-              onChangeText={(text) => setName(text)}
+              value={email}
+              onChangeText={(text) => setEmail(text)}
               style={{
                 color: "gray",
                 marginVertical: 10,
                 width: 300,
-                fontSize: name ? 18 : 18,
+                fontSize: email ? 18 : 18,
               }}
-              placeholder="Enter your Name"
+              placeholder="enter your Email"
             />
           </View>
 
@@ -104,9 +138,9 @@ export default function login() {
                   color: "gray",
                   marginVertical: 10,
                   width: 300,
-                  fontSize: password ? 18 : 18
+                  fontSize: password ? 18 : 18,
                 }}
-                placeholder="Enter your Password"
+                placeholder="enter your Password"
               />
             </View>
           </View>
@@ -147,7 +181,7 @@ export default function login() {
                 fontWeight: "bold",
               }}
             >
-              bin lol
+              Login
             </Text>
           </Pressable>
 
@@ -161,6 +195,10 @@ export default function login() {
           </Pressable>
         </View>
       </KeyboardAvoidingView>
-      </SafeAreaView>
-  )
-}
+    </SafeAreaView>
+  );
+};
+
+export default login;
+
+const styles = StyleSheet.create({});

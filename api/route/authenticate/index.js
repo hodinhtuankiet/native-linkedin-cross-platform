@@ -1,9 +1,11 @@
 import express from 'express'
-import { StatusCodes } from 'http-status-codes'
-import registerRoute from './registerRoute'
+import { registerRoute } from './registerRoute.js'
+import { loginControllerr } from './loginRoute.js'
 
 const Router = express.Router()
 
 // Register API
 Router.use('/', registerRoute)
+
+Router.use('/', loginControllerr)
 export const Authenticate_APIs = Router

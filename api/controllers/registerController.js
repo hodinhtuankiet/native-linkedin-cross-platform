@@ -1,6 +1,7 @@
-import { StatusCodes } from 'http-status-codes'
-import User from '../models/users'; 
-import { sendVerificationEmail } from './sendVerificationEmail '; 
+import User from '../models/users.js';
+import sendVerificationEmail from './sendVerificationEmail .js'; // corrected import statement
+import crypto from 'crypto'; 
+
 const createNew = async (req, res, next ) => {
   try {
     // return json về Clients
@@ -32,7 +33,7 @@ const createNew = async (req, res, next ) => {
     });
   } catch (error) {
     console.log("Error registering user", error);
-    res.status(500).json({ message: "Registration failed" });
+    res.status(500).json({ message: "Registration failed" }); // corrected message
   }
 }
 

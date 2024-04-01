@@ -31,6 +31,7 @@ const register = () => {
           password:password,
           profileImage:image
       }
+      console.log(user);
       axios.post("http://localhost:3000/register", user).then((response) => {
           console.log(response);
           Alert.alert("Registration successful","You have been registered successfully");
@@ -66,7 +67,7 @@ const register = () => {
               color: "#041E42",
             }}
           >
-            Register to your Account hjhjk
+            Register to your Account
           </Text>
         </View>
 
