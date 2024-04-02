@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import crypto from 'crypto';
 import { Authenticate_APIs } from './route/authenticate/index.js';
+import { USER_APIs } from './route/users/index.js';
 import nodemailer from 'nodemailer';
 // import mongodb from './config/mongodb';
 import jwt from 'jsonwebtoken'; 
@@ -26,6 +27,8 @@ mongoose.connect('mongodb+srv://tuankietdev:tuankietdev@cluster0.7wnyjhf.mongodb
     });
 
 app.use('/', Authenticate_APIs);
+
+app.use('/', USER_APIs);
 
 app.listen(port, () => {
     console.log('server is running on port');
