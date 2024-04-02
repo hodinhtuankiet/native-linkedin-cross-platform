@@ -9,5 +9,4 @@ export const env = {
   AUTHOR:  process.env.AUTHOR,
   PASSWORDS: process.env.PASSWORDS,
   BUILD_MODE: process.env.BUILD_MODE
-
 }

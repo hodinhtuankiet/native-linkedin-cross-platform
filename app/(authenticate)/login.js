@@ -42,9 +42,9 @@ const login = () => {
       email: email,
       password: password
     }
-
+    console.log(user);
     try {
-      const response = await axios.post("http://localhost:3000/login", user);
+      const response = await axios.post("http://192.168.110.243:3000/login", user);
       console.log("Login response:", response.data);
       const token = response.data.token;
       AsyncStorage.setItem("authToken", token);

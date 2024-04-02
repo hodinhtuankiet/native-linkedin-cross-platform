@@ -5,11 +5,13 @@ import crypto from 'crypto';
 import { Authenticate_APIs } from './route/authenticate/index.js';
 import nodemailer from 'nodemailer';
 // import mongodb from './config/mongodb';
-import cors from 'cors';
 import jwt from 'jsonwebtoken'; 
+// import { corsOptions } from './config/cors.js';
 const app = express();
 const port = 3000;
+import cors from 'cors';
 
+// app.use(cors(corsOptions))
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
