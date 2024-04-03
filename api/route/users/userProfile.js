@@ -2,8 +2,6 @@ import express from 'express'
 
 const Router = express.Router()
 import { userController } from '../../controllers/userController'
-Router.route('/profile/:userId')
+Router.route('/:userId')
   .get(userController.findIdByProfile)
-  Router.route('/:userId')
-  .get(userController.findIdByUserId)
-export const userRoute = Router
+export const userProfile = Router

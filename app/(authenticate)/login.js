@@ -47,6 +47,7 @@ const login = () => {
       const response = await axios.post("http://192.168.110.243:3000/login", user);
       console.log("Login response:", response.data);
       const token = response.data.token;
+      // Lưu token vào AsyncStorage với key là "authToken"
       AsyncStorage.setItem("authToken", token);
       router.replace("/(tab)/home");
     } catch (error) {
