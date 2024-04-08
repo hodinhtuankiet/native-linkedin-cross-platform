@@ -14,6 +14,7 @@ const findIdByProfile = async (req, res, next ) => {
         res.status(500).json({ message: "Error retrieving user profile" });
       }
 }
+    // Aims to retrieve users who are not connected of your account
 const findIdByUserId = async (req, res, next ) => {
   try {
     const loggedInUserId = req.params.userId;
@@ -23,17 +24,20 @@ const findIdByUserId = async (req, res, next ) => {
       "connections",
       "_id"
     );
+    console.log("loggedInuser sau khi populate: " , loggedInuser);
     if (!loggedInuser) {
       return res.status(400).json({ message: "User not found" });
     }
 
-    //get the ID's of the connected users
+    // results in an array of _id values representing the connected users
     const connectedUserIds = loggedInuser.connections.map(
       (connection) => connection._id
     );
 
     //find the users who are not connected to the logged-in user Id
     const users = await User.find({
+      // $ne operator means "not equal to" 
+      // $nin operator means "not in"
       _id: { $ne: loggedInUserId, $nin: connectedUserIds },
     });
 
