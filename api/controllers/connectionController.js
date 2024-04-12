@@ -25,9 +25,9 @@ const showAllRequestConnections = async (req, res, next) => {
       .populate("connectionRequests", "name email profileImage")
       .lean();
 
-    // const connectionRequests = user.connectionRequests;
+    const connectionRequests = user.connectionRequests;
 
-    // res.json(connectionRequests);
+    res.json(connectionRequests);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal Server Error" });

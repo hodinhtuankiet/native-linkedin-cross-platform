@@ -7,7 +7,7 @@ import UserProfile from "../../../components/UserProfile";
 import { useRouter } from "expo-router";
 import { jwtDecode } from "jwt-decode";
 import { StyleSheet, Text, View, Pressable, FlatList } from "react-native";
-
+import "core-js/stable/atob";
 const Index = () => {
   const [userId, setUserId] = useState("");
   const [user, setUser] = useState();
@@ -43,7 +43,9 @@ const Index = () => {
 
   const fetchUserProfile = async () => {
     try {
-      const response = await axios.get(`http://192.168.110.243:3000/profile/${userId}`);
+      const response = await axios.get(
+        `http://192.168.110.243:3000/profile/${userId}`
+      );
       const userData = response.data.user;
       setUser(userData);
     } catch (error) {
@@ -53,7 +55,9 @@ const Index = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get(`http://192.168.110.243:3000/users/${userId}`);
+      const response = await axios.get(
+        `http://192.168.110.243:3000/users/${userId}`
+      );
       setUsers(response.data);
     } catch (error) {
       console.log(error);
@@ -62,7 +66,9 @@ const Index = () => {
 
   const fetchFriendRequests = async () => {
     try {
-      const response = await axios.get(`http://192.168.110.243:3000/connection-request/${userId}`);
+      const response = await axios.get(
+        `http://192.168.110.243:3000/connection-request/${userId}`
+      );
       if (response.status === 200) {
         const connectionRequestsData = response.data?.map((friendRequest) => ({
           _id: friendRequest._id,
@@ -90,28 +96,63 @@ const Index = () => {
           justifyContent: "space-between",
         }}
       >
-        <Text style={{ fontSize: 16, fontWeight: "600" }}>Manage My Network</Text>
+        <Text style={{ fontSize: 16, fontWeight: "600" }}>
+          Manage My Network
+        </Text>
         <AntDesign name="arrowright" size={22} color="black" />
       </Pressable>
 
-      <View style={{ borderColor: "#E0E0E0", borderWidth: 2, marginVertical: 10 }} />
+      <View
+        style={{ borderColor: "#E0E0E0", borderWidth: 2, marginVertical: 10 }}
+      />
 
-      <View style={{ marginTop: 10, marginHorizontal: 10, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+      <View
+        style={{
+          marginTop: 10,
+          marginHorizontal: 10,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
         <Text style={{ fontSize: 16, fontWeight: "600" }}>Invitations (0)</Text>
         <AntDesign name="arrowright" size={22} color="black" />
       </View>
 
-      <View style={{ borderColor: "#E0E0E0", borderWidth: 2, marginVertical: 10 }} />
+      <View
+        style={{ borderColor: "#E0E0E0", borderWidth: 2, marginVertical: 10 }}
+      />
 
       <View style={{ marginHorizontal: 15 }}>
-        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
           <Text>Grow your network faster</Text>
           <Entypo name="cross" size={24} color="black" />
         </View>
 
-        <Text>Find and contact the right people. Plus see who's viewed your profile</Text>
-        <View style={{ backgroundColor: "#FFC72C", width: 140, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 25, marginTop: 8 }}>
-          <Text style={{ textAlign: "center", color: "white", fontWeight: "600" }}>Try Premium</Text>
+        <Text>
+          Find and contact the right people. Plus see who's viewed your profile
+        </Text>
+        <View
+          style={{
+            backgroundColor: "#FFC72C",
+            width: 140,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            borderRadius: 25,
+            marginTop: 8,
+          }}
+        >
+          <Text
+            style={{ textAlign: "center", color: "white", fontWeight: "600" }}
+          >
+            Try Premium
+          </Text>
         </View>
       </View>
 
