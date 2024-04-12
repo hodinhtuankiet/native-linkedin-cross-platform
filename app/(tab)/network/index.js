@@ -5,8 +5,8 @@ import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import UserProfile from "../../../components/UserProfile";
 import { useRouter } from "expo-router";
-import { jwtDecode } from "jwt-decode";
 import { StyleSheet, Text, View, Pressable, FlatList } from "react-native";
+import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
 const Index = () => {
   const [userId, setUserId] = useState("");
@@ -63,7 +63,7 @@ const Index = () => {
       console.log(error);
     }
   };
-
+  // fetch all friends send request for me
   const fetchFriendRequests = async () => {
     try {
       const response = await axios.get(
