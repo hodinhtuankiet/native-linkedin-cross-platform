@@ -2,12 +2,12 @@
 
 # dependencies
 node_modules/
-
 # Expo
 .expo/
 dist/
 web-build/
 
+firebase.js
 # Native
 *.orig.*
 *.jks

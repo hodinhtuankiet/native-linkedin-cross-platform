@@ -10,16 +10,15 @@ import {
 import React, { useState, useEffect } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
-// import jwt_decode from "jwt-decode";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
-// import { firebase } from "../../../firebase";
-// import axios from "axios";
+import { firebase } from "../../../firebase";
+import axios from "axios";
 import { useRouter } from "expo-router";
 import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
+
 const index = () => {
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
@@ -27,22 +26,87 @@ const index = () => {
   const router = useRouter();
   useEffect(() => {
     const fetchUser = async () => {
-      try {
-        const token = await AsyncStorage.getItem("authToken");
-        if (token) {
-          const decodedToken = jwtDecode(token);
-          const userId = decodedToken.userId;
-        } else {
-          console.log("No token found");
-        }
-      } catch (error) {
-        console.error("Error fetching user:", error);
-      }
+      const token = await AsyncStorage.getItem("authToken");
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.userId;
+      setUserId(userId);
     };
+
     fetchUser();
   }, []);
   const pickImage = async () => {
-    // let result = await Image
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+  const createPost = async () => {
+    try {
+      const uploadedUrl = await uploadFile();
+
+      const postData = {
+        description: description,
+        imageUrl: uploadedUrl,
+        userId: userId,
+      };
+
+      const response = await axios.post(
+        "http://192.168.110.243:3000/create",
+        postData
+      );
+
+      console.log("post created", response.data);
+      if (response.status === 201) {
+        router.replace("/(tab)/home");
+      }
+    } catch (error) {
+      console.log("error creating post", error);
+    }
+  };
+  const uploadFile = async () => {
+    try {
+      // Ensure that 'image' contains a valid file URI
+      console.log("Image URI:", image);
+
+      const { uri } = await FileSystem.getInfoAsync(image);
+
+      if (!uri) {
+        throw new Error("Invalid file URI");
+      }
+
+      const blob = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = () => {
+          resolve(xhr.response);
+        };
+        xhr.onerror = (e) => {
+          reject(new TypeError("Network request failed"));
+        };
+        xhr.responseType = "blob";
+        xhr.open("GET", uri, true);
+        xhr.send(null);
+      });
+
+      const filename = image.substring(image.lastIndexOf("/") + 1);
+
+      const ref = firebase.storage().ref().child(filename);
+      await ref.put(blob);
+
+      const downloadURL = await ref.getDownloadURL();
+      // setUrl(downloadURL);
+      return downloadURL;
+      // Alert.alert("Photo uploaded");
+    } catch (error) {
+      console.log("Error:", error);
+      // Handle the error or display a user-friendly message
+    }
   };
   return (
     <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
@@ -63,7 +127,7 @@ const index = () => {
                 uri: "https://drive.google.com/uc?export=download&id=12cs5IdWLHuiWxBTghf8uorJ8cmYD2YBw",
               }}
             />
-            <Text style={{ fontWeight: "500" }}>Anyone</Text>
+            <Text style={{ fontWeight: "500" }}>Dinh Tuan Kiet</Text>
           </View>
         </View>
 
@@ -77,7 +141,7 @@ const index = () => {
         >
           <Entypo name="back-in-time" size={24} color="black" />
           <Pressable
-            // onPress={createPost}
+            onPress={createPost}
             style={{
               padding: 10,
               backgroundColor: "#0072b1",
@@ -102,12 +166,13 @@ const index = () => {
         value={description}
         onChangeText={(text) => setDescription(text)}
         placeholder="What do you want to talk about"
-        placeholderTextColor={"black"}
+        placeholderTextColor={"rgba(0, 0, 0, 0.5)"}
         style={{
           marginHorizontal: 10,
           fontSize: 15,
           fontWeight: "500",
           marginTop: 10,
+          color: "black",
         }}
         multiline={true}
         numberOfLines={10}
@@ -152,3 +217,5 @@ const index = () => {
 };
 
 export default index;
+
+const styles = StyleSheet.create({});
