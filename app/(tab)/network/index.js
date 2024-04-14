@@ -40,13 +40,14 @@ const Index = () => {
       fetchFriendRequests();
     }
   }, [userId]);
-
+  // lấy profile của người đang sử dụng
   const fetchUserProfile = async () => {
     try {
       const response = await axios.get(
         `http://192.168.110.243:3000/profile/${userId}`
       );
       const userData = response.data.user;
+      // set data vào
       setUser(userData);
     } catch (error) {
       console.log("error fetching user profile", error);

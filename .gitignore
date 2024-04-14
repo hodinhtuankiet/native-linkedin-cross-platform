@@ -7,7 +7,6 @@ node_modules/
 dist/
 web-build/
 
-firebase.js
 # Native
 *.orig.*
 *.jks
@@ -15,7 +14,7 @@ firebase.js
 *.p12
 *.key
 *.mobileprovision
-
+firebase.js
 # Metro
 .metro-health-check*
 
