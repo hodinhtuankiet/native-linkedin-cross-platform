@@ -32,6 +32,8 @@ const createNewPost = async (req, res, next) => {
 const showAllPosts = async (req, res, next) => {
   try {
     const posts = await Post.find().populate("user", "name profileImage");
+
+    res.status(200).json({ posts });
   } catch (error) {
     console.log("An error occurred creating new post");
     res.status(500).json({ error: error });
