@@ -17,6 +17,12 @@ import { Ionicons, Entypo, Feather, FontAwesome } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import moment from "moment";
 import { useRouter } from "expo-router";
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from "react-native-popup-menu";
 
 const index = () => {
   // // Initializes userId with an empty string
@@ -24,6 +30,7 @@ const index = () => {
   // Initializes user with undefined
   const [user, setUser] = useState();
   const [posts, setPosts] = useState([]);
+  // Get token id and decode
   useEffect(() => {
     const fetchUser = async () => {
       const token = await AsyncStorage.getItem("authToken");
@@ -71,10 +78,11 @@ const index = () => {
     setShowfullText(!showfullText);
   };
   const [isLiked, setIsLiked] = useState(false);
+  // handle like/unlike artical
   const handleLikePost = async (postId) => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/like/${postId}/${userId}`
+        `http://192.168.110.243:3000/like/${postId}/${userId}`
       );
       if (response.status === 200) {
         const updatedPost = response.data.post;
@@ -85,9 +93,26 @@ const index = () => {
     }
   };
   const router = useRouter();
+
+  const [menuVisible, setMenuVisible] = useState(false);
+
+  const hideMenu = () => {
+    setMenuVisible(false);
+  };
+
+  const showMenu = () => {
+    setMenuVisible(true);
+  };
+
+  const handleMenuItemClick = (action) => {
+    // Xử lý logic khi người dùng chọn một mục trong menu
+    // Ví dụ: chỉnh sửa, xóa, thêm
+    hideMenu(); // Ẩn menu sau khi chọn
+  };
   // console.log("fetch post", post);
   return (
     <ScrollView>
+      {/* Profile & Search  */}
       <View
         style={{
           padding: 10,
@@ -126,7 +151,7 @@ const index = () => {
 
         <Ionicons name="chatbox-ellipses-outline" size={24} color="black" />
       </View>
-
+      {/* Artical  */}
       <View>
         {posts?.map((item, index) => (
           <View key={index}>
@@ -138,6 +163,7 @@ const index = () => {
               }}
               key={index}
             >
+              {/* Profile Name & Carrer & Date  */}
               <View
                 style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
               >
@@ -168,7 +194,7 @@ const index = () => {
                   </Text>
                 </View>
               </View>
-
+              {/* Pop up menu crud  */}
               <View
                 style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
               >

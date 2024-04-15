@@ -10,4 +10,6 @@ Router.use("/all", postRoute);
 
 Router.use("/like", interactRoute);
 
+Router.use("/profile", interactRoute);
+
 export const POST_APIs = Router;
