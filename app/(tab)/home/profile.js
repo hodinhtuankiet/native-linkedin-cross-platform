@@ -20,6 +20,8 @@ import {
 } from "@expo/vector-icons";
 import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
+const IP_ADDRESS = "http://192.168.1.11:3000";
+
 const profile = () => {
   const [userId, setUserId] = useState("");
   const [user, setUser] = useState();
@@ -42,9 +44,7 @@ const profile = () => {
   }, [userId]);
   const fetchUserProfile = async () => {
     try {
-      const response = await axios.get(
-        `http://192.168.110.243:3000/profile/${userId}`
-      );
+      const response = await axios.get(`${IP_ADDRESS}/profile/${userId}`);
       const userData = response.data.user;
       setUser(userData);
     } catch (error) {
@@ -54,12 +54,9 @@ const profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const handleSaveDescription = async () => {
     try {
-      const response = await axios.put(
-        `http://192.168.110.243:3000/profile/${userId}`,
-        {
-          userDescription,
-        }
-      );
+      const response = await axios.put(`${IP_ADDRESS}/profile/${userId}`, {
+        userDescription,
+      });
 
       if (response.status === 200) {
         await fetchUserProfile();
@@ -78,6 +75,7 @@ const profile = () => {
     console.log("auth token cleared");
     router.replace("/(authenticate)/login");
   };
+
   return (
     <View>
       <View

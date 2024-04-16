@@ -7,15 +7,16 @@ import {
   Pressable,
   KeyboardAvoidingView,
   TextInput,
-  Alert
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Entypo } from '@expo/vector-icons';
+import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import axios from "axios"
+import axios from "axios";
+const IP_ADDRESS = "http://192.168.1.11:3000";
 
 const register = () => {
   const [email, setEmail] = useState("");
@@ -24,26 +25,35 @@ const register = () => {
   const [image, setImage] = useState("");
   const router = useRouter();
   const handleRegister = () => {
-      console.log("hello")
-      const user = {
-          name:name,
-          email:email,
-          password:password,
-          profileImage:image
-      }
-      console.log(user);
-      axios.post("http://192.168.110.243:3000/register", user).then((response) => {
-          console.log(response);
-          Alert.alert("Registration successful","You have been registered successfully");
-          setName("");
-          setEmail("");
-          setPassword("");
-          setImage("");
-      }).catch((error) => {
-          Alert.alert("Registration failed","An error occurred while registering");
-          console.log("registration failed",error)
+    console.log("hello");
+    const user = {
+      name: name,
+      email: email,
+      password: password,
+      profileImage: image,
+    };
+    console.log(user);
+    axios
+      .post(`${IP_ADDRESS}/register`, user)
+      .then((response) => {
+        console.log(response);
+        Alert.alert(
+          "Registration successful",
+          "You have been registered successfully"
+        );
+        setName("");
+        setEmail("");
+        setPassword("");
+        setImage("");
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Registration failed",
+          "An error occurred while registering"
+        );
+        console.log("registration failed", error);
       });
-  }
+  };
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: "white", alignItems: "center" }}
@@ -132,37 +142,36 @@ const register = () => {
             />
           </View>
 
-
-            <View
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 5,
+              backgroundColor: "#E0E0E0",
+              paddingVertical: 5,
+              borderRadius: 5,
+              marginTop: 30,
+            }}
+          >
+            <AntDesign
+              style={{ marginLeft: 8 }}
+              name="lock1"
+              size={24}
+              color="gray"
+            />
+            <TextInput
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              secureTextEntry={true}
               style={{
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 5,
-                backgroundColor: "#E0E0E0",
-                paddingVertical: 5,
-                borderRadius: 5,
-                marginTop: 30,
+                color: "gray",
+                marginVertical: 10,
+                width: 300,
+                fontSize: password ? 18 : 18,
               }}
-            >
-              <AntDesign
-                style={{ marginLeft: 8 }}
-                name="lock1"
-                size={24}
-                color="gray"
-              />
-              <TextInput
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-                secureTextEntry={true}
-                style={{
-                  color: "gray",
-                  marginVertical: 10,
-                  width: 300,
-                  fontSize: password ? 18 : 18,
-                }}
-                placeholder="enter your Password"
-              />
-            </View>
+              placeholder="enter your Password"
+            />
+          </View>
 
           <View
             style={{
@@ -175,7 +184,12 @@ const register = () => {
               marginTop: 30,
             }}
           >
-            <Entypo name="image" size={24} color="gray" style={{marginLeft:8}} />
+            <Entypo
+              name="image"
+              size={24}
+              color="gray"
+              style={{ marginLeft: 8 }}
+            />
             <TextInput
               value={image}
               onChangeText={(text) => setImage(text)}
@@ -206,7 +220,7 @@ const register = () => {
           <View style={{ marginTop: 80 }} />
 
           <Pressable
-         onPress={handleRegister}
+            onPress={handleRegister}
             style={{
               width: 200,
               backgroundColor: "#0072b1",

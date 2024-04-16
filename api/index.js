@@ -18,7 +18,6 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// Use mongoose.connect() to connect to MongoDB
 // mongoose
 //   .connect(
 //     "mongodb+srv://tuankietdev:tuankietdev@cluster0.7wnyjhf.mongodb.net/linkedin"

@@ -7,15 +7,16 @@ import {
   KeyboardAvoidingView,
   TextInput,
   Pressable,
-  Alert
+  Alert,
 } from "react-native";
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import axios from "axios";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const IP_ADDRESS = "http://192.168.1.11:3000";
 
 const login = () => {
   const [email, setEmail] = useState("");
@@ -32,7 +33,7 @@ const login = () => {
       } catch (error) {
         console.error("Error while checking login status:", error);
       }
-    }
+    };
 
     checkLoginStatus();
   }, []);
@@ -40,11 +41,11 @@ const login = () => {
   const handleLogin = async () => {
     const user = {
       email: email,
-      password: password
-    }
+      password: password,
+    };
     console.log(user);
     try {
-      const response = await axios.post("http://192.168.110.243:3000/login", user);
+      const response = await axios.post(`${IP_ADDRESS}/login`, user);
       console.log("Login response:", response.data);
       const token = response.data.token;
       // Lưu token vào AsyncStorage với key là "authToken"
@@ -54,7 +55,7 @@ const login = () => {
       console.error("Login failed:", error);
       Alert.alert("Login failed", "An error occurred while logging in");
     }
-  }
+  };
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: "white", alignItems: "center" }}
@@ -164,7 +165,7 @@ const login = () => {
           <View style={{ marginTop: 80 }} />
 
           <Pressable
-          onPress={handleLogin}
+            onPress={handleLogin}
             style={{
               width: 200,
               backgroundColor: "#0072b1",

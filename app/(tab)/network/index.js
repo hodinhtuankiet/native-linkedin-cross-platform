@@ -15,6 +15,8 @@ const Index = () => {
   const router = useRouter();
   const [connectionRequests, setConnectionRequests] = useState([]);
 
+  const IP_ADDRESS = "http://192.168.1.11:3000";
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -43,9 +45,7 @@ const Index = () => {
   // lấy profile của người đang sử dụng
   const fetchUserProfile = async () => {
     try {
-      const response = await axios.get(
-        `http://192.168.110.243:3000/profile/${userId}`
-      );
+      const response = await axios.get(`${IP_ADDRESS}/profile/${userId}`);
       const userData = response.data.user;
       // set data vào
       setUser(userData);
@@ -56,9 +56,7 @@ const Index = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get(
-        `http://192.168.110.243:3000/users/${userId}`
-      );
+      const response = await axios.get(`${IP_ADDRESS}/users/${userId}`);
       setUsers(response.data);
     } catch (error) {
       console.log(error);
@@ -68,7 +66,7 @@ const Index = () => {
   const fetchFriendRequests = async () => {
     try {
       const response = await axios.get(
-        `http://192.168.110.243:3000/connection-request/${userId}`
+        `${IP_ADDRESS}/connection-request/${userId}`
       );
       if (response.status === 200) {
         const connectionRequestsData = response.data?.map((friendRequest) => ({

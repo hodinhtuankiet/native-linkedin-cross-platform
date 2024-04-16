@@ -6,6 +6,7 @@ import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
 import { AntDesign } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
+const IP_ADDRESS = "http://192.168.1.11:3000";
 
 const connections = () => {
   const [connections, setConnections] = useState([]);
@@ -35,9 +36,7 @@ const connections = () => {
 
   const fetchConnections = async () => {
     try {
-      const reponse = await axios.get(
-        `http://192.168.110.243:3000/connections/${userId}`
-      );
+      const reponse = await axios.get(`${IP_ADDRESS}/connections/${userId}`);
       setConnections(reponse.data.connections);
     } catch (error) {
       console.log(error);

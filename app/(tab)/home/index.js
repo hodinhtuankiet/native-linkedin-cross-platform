@@ -24,12 +24,15 @@ import {
   MenuTrigger,
 } from "react-native-popup-menu";
 
+const IP_ADDRESS = "http://192.168.1.11:3000";
+
 const index = () => {
-  // // Initializes userId with an empty string
+  // Initializes userId with an empty string
   const [userId, setUserId] = useState("");
   // Initializes user with undefined
   const [user, setUser] = useState();
   const [posts, setPosts] = useState([]);
+
   // Get token id and decode
   useEffect(() => {
     const fetchUser = async () => {
@@ -41,6 +44,7 @@ const index = () => {
 
     fetchUser();
   }, []);
+
   useEffect(() => {
     if (userId) {
       fetchUserProfile();
@@ -49,9 +53,7 @@ const index = () => {
 
   const fetchUserProfile = async () => {
     try {
-      const response = await axios.get(
-        `http://192.168.110.243:3000/profile/${userId}`
-      );
+      const response = await axios.get(`${IP_ADDRESS}/profile/${userId}`);
       const userData = response.data.user;
       setUser(userData);
     } catch (error) {
@@ -62,7 +64,7 @@ const index = () => {
   useEffect(() => {
     const fetchAllPosts = async () => {
       try {
-        const response = await axios.get("http://192.168.110.243:3000/all");
+        const response = await axios.get(`${IP_ADDRESS}/all`);
         // console.log(response.data);
         return setPosts(response.data.posts);
       } catch (error) {
@@ -70,7 +72,7 @@ const index = () => {
       }
     };
     fetchAllPosts();
-  });
+  }, []);
 
   const MAX_LINES = 2;
   const [showfullText, setShowfullText] = useState(false);
@@ -82,7 +84,7 @@ const index = () => {
   const handleLikePost = async (postId) => {
     try {
       const response = await axios.post(
-        `http://192.168.110.243:3000/like/${postId}/${userId}`
+        `${IP_ADDRESS}/like/${postId}/${userId}`
       );
       if (response.status === 200) {
         const updatedPost = response.data.post;
@@ -93,23 +95,6 @@ const index = () => {
     }
   };
   const router = useRouter();
-
-  const [menuVisible, setMenuVisible] = useState(false);
-
-  const hideMenu = () => {
-    setMenuVisible(false);
-  };
-
-  const showMenu = () => {
-    setMenuVisible(true);
-  };
-
-  const handleMenuItemClick = (action) => {
-    // Xử lý logic khi người dùng chọn một mục trong menu
-    // Ví dụ: chỉnh sửa, xóa, thêm
-    hideMenu(); // Ẩn menu sau khi chọn
-  };
-  // console.log("fetch post", post);
   return (
     <ScrollView>
       {/* Profile & Search  */}
