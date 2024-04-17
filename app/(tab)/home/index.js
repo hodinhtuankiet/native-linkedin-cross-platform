@@ -7,33 +7,24 @@ import {
   Image,
   TextInput,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { jwtDecode } from "jwt-decode";
-import "core-js/stable/atob";
+import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import jwt_decode from "jwt-decode";
 import axios from "axios";
-import { AntDesign } from "@expo/vector-icons";
 import { Ionicons, Entypo, Feather, FontAwesome } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import moment from "moment";
 import { useRouter } from "expo-router";
-import {
-  Menu,
-  MenuOptions,
-  MenuOption,
-  MenuTrigger,
-} from "react-native-popup-menu";
+import { jwtDecode } from "jwt-decode";
+import "core-js/stable/atob";
 
 const IP_ADDRESS = "http://192.168.1.11:3000";
 
 const index = () => {
-  // Initializes userId with an empty string
   const [userId, setUserId] = useState("");
-  // Initializes user with undefined
   const [user, setUser] = useState();
   const [posts, setPosts] = useState([]);
-
-  // Get token id and decode
   useEffect(() => {
     const fetchUser = async () => {
       const token = await AsyncStorage.getItem("authToken");
@@ -44,13 +35,11 @@ const index = () => {
 
     fetchUser();
   }, []);
-
   useEffect(() => {
     if (userId) {
       fetchUserProfile();
     }
   }, [userId]);
-
   const fetchUserProfile = async () => {
     try {
       const response = await axios.get(`${IP_ADDRESS}/profile/${userId}`);
@@ -60,19 +49,17 @@ const index = () => {
       console.log("error fetching user profile", error);
     }
   };
-
   useEffect(() => {
     const fetchAllPosts = async () => {
       try {
         const response = await axios.get(`${IP_ADDRESS}/all`);
-        // console.log(response.data);
-        return setPosts(response.data.posts);
+        setPosts(response.data.posts);
       } catch (error) {
-        console.log("error fetching All post", error);
+        console.log("error fetching posts", error);
       }
     };
     fetchAllPosts();
-  }, []);
+  });
 
   const MAX_LINES = 2;
   const [showfullText, setShowfullText] = useState(false);
@@ -80,7 +67,6 @@ const index = () => {
     setShowfullText(!showfullText);
   };
   const [isLiked, setIsLiked] = useState(false);
-  // handle like/unlike artical
   const handleLikePost = async (postId) => {
     try {
       const response = await axios.post(
@@ -97,7 +83,6 @@ const index = () => {
   const router = useRouter();
   return (
     <ScrollView>
-      {/* Profile & Search  */}
       <View
         style={{
           padding: 10,
@@ -136,7 +121,7 @@ const index = () => {
 
         <Ionicons name="chatbox-ellipses-outline" size={24} color="black" />
       </View>
-      {/* Artical  */}
+
       <View>
         {posts?.map((item, index) => (
           <View key={index}>
@@ -148,7 +133,6 @@ const index = () => {
               }}
               key={index}
             >
-              {/* Profile Name & Carrer & Date  */}
               <View
                 style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
               >
@@ -174,12 +158,11 @@ const index = () => {
                     Engineer Graduate | LinkedIn Member
                   </Text>
                   <Text style={{ color: "gray" }}>
-                    {/* Format the date as "YYYY-MM-DD" */}
                     {moment(item.createdAt).format("MMMM Do YYYY")}
                   </Text>
                 </View>
               </View>
-              {/* Pop up menu crud  */}
+
               <View
                 style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
               >
@@ -277,11 +260,11 @@ const index = () => {
                 </Text>
               </Pressable>
               <Pressable>
-                <Ionicons
-                  // name="md-share"
+                <AntDesign
+                  style={{ textAlign: "center" }}
+                  name="sharealt"
                   size={20}
                   color="gray"
-                  style={{ textAlign: "center" }}
                 />
                 <Text
                   style={{

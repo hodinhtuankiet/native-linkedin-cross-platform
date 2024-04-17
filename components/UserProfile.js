@@ -7,21 +7,19 @@ import {
   Pressable,
 } from "react-native";
 import React, { useState } from "react";
+const IP_ADDRESS = "http://192.168.1.11:3000";
 
 const UserProfile = ({ item, userId }) => {
   const [connectionSent, setConnectionSent] = useState(false);
   const sendConnectionRequest = async (currentUserId, selectedUserId) => {
     try {
-      const response = await fetch(
-        "http://192.168.110.243:3000/connection-request",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ currentUserId, selectedUserId }),
-        }
-      );
+      const response = await fetch(`${IP_ADDRESS}/connection-request`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ currentUserId, selectedUserId }),
+      });
 
       if (response.ok) {
         setConnectionSent(true);

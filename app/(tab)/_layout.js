@@ -10,7 +10,7 @@ export default function Layout() {
         name="home"
         options={{
           tabBarLabel: "Home",
-          tabBarLabelStyle: { color: "#008E97" },
+          tabBarLabelStyle: { color: "#0984e3" },
           headerShown: false,
           tabBarIcon: ({ focused }) =>
             focused ? (
@@ -23,8 +23,8 @@ export default function Layout() {
       <Tabs.Screen
         name="network"
         options={{
-          tabBarLabel: "network",
-          tabBarLabelStyle: { color: "#008E97" },
+          tabBarLabel: "Network",
+          tabBarLabelStyle: { color: "#0984e3" },
           headerShown: false,
           tabBarIcon: ({ focused }) =>
             focused ? (
@@ -38,13 +38,27 @@ export default function Layout() {
         name="post"
         options={{
           tabBarLabel: "Post",
-          tabBarLabelStyle: { color: "#008E97" },
+          tabBarLabelStyle: { color: "#0984e3" },
           headerShown: false,
           tabBarIcon: ({ focused }) =>
             focused ? (
               <AntDesign name="plussquare" size={24} color="black" />
             ) : (
               <AntDesign name="plussquareo" size={24} color="black" />
+            ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile/index"
+        options={{
+          tabBarLabel: "Profile",
+          tabBarLabelStyle: { color: "#0984e3" },
+          headerShown: false,
+          tabBarIcon: ({ focused }) =>
+            focused ? (
+              <AntDesign name="profile" size={24} color="black" />
+            ) : (
+              <AntDesign name="profile" size={24} color="black" />
             ),
         }}
       />

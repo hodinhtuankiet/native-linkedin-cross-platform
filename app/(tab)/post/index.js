@@ -163,10 +163,10 @@ const index = () => {
       <TextInput
         value={description}
         onChangeText={(text) => setDescription(text)}
-        placeholder="What do you want to talk about"
+        placeholder={"What do you wanna to talk about\nPlease write down here!"}
         placeholderTextColor={"rgba(0, 0, 0, 0.5)"}
         style={{
-          marginHorizontal: 10,
+          marginHorizontal: 15,
           fontSize: 15,
           fontWeight: "500",
           marginTop: 10,

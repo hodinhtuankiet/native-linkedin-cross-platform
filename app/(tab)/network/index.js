@@ -8,6 +8,7 @@ import { useRouter } from "expo-router";
 import { StyleSheet, Text, View, Pressable, FlatList } from "react-native";
 import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
+import ConnectionRequest from "../../../components/ConnectionRequest";
 const Index = () => {
   const [userId, setUserId] = useState("");
   const [user, setUser] = useState();
@@ -121,6 +122,18 @@ const Index = () => {
       <View
         style={{ borderColor: "#E0E0E0", borderWidth: 2, marginVertical: 10 }}
       />
+
+      <View>
+        {connectionRequests?.map((item, index) => (
+          <ConnectionRequest
+            item={item}
+            key={index}
+            connectionRequests={connectionRequests}
+            setConnectionRequests={setConnectionRequests}
+            userId={userId}
+          />
+        ))}
+      </View>
 
       <View style={{ marginHorizontal: 15 }}>
         <View
