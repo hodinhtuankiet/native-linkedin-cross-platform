@@ -1,11 +1,13 @@
-import { View, Text } from "react-native";
-import React, { useEffect, useState } from "react";
+import { Image, StyleSheet, Text, View } from "react-native";
+import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Entypo, Feather } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
+import axios from "axios";
+import moment from "moment";
+
 const IP_ADDRESS = "http://192.168.1.11:3000";
 
 const connections = () => {
