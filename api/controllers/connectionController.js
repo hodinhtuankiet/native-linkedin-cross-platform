@@ -60,8 +60,28 @@ const showAllRequestConnectionsAccept = async (req, res, next) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+const showAllConnectionsAccepted = async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+
+    const user = await User.findById(userId)
+      .populate("connections", "name profileImage createdAt")
+      .exec();
+
+    if (!user) {
+      return res.status(404).json({ message: "User is not found" });
+    }
+    res.status(200).json({ connections: user.connections });
+  } catch (error) {
+    console.log("error fetching the connections", error);
+    res.status(500).json({ message: "Error fetching the connections" });
+  }
+};
+
 export const connectionController = {
   requestConnection,
   showAllRequestConnections,
   showAllRequestConnectionsAccept,
+  showAllConnectionsAccepted,
 };

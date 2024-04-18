@@ -1,7 +1,6 @@
-import express from 'express'
+import express from "express";
 
-const Router = express.Router()
-import { userController } from '../../controllers/userController'
-Router.route('/')
-  .get(userController.findIdByProfile)
-export const connectionRoute = Router
+const Router = express.Router();
+import { connectionController } from "../../controllers/connectionController";
+Router.route("/:userId").get(connectionController.showAllConnectionsAccepted);
+export const connectionRoute = Router;

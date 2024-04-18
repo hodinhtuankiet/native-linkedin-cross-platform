@@ -1,12 +1,11 @@
-import express from 'express'
-import { connectionRoute } from './connection'
-import { connectionRequestRoute } from './connectionRequest'
-const Router = express.Router()
+import express from "express";
+import { connectionRoute } from "./connection";
+import { connectionRequestRoute } from "./connectionRequest";
+const Router = express.Router();
 
 // Register API
-Router.use('/connection-request', connectionRequestRoute)
+Router.use("/connection-request", connectionRequestRoute);
 
-Router.use('/connection', connectionRoute)
+Router.use("/connections", connectionRoute);
 
-
-export const CONNECTION_APIs = Router
+export const CONNECTION_APIs = Router;

@@ -13,6 +13,8 @@ const app = express();
 const port = 3000;
 import cors from "cors";
 import "dotenv/config";
+import passport from "./node_modules/passports";
+import { Strategy as LocalStrategy } from "passport-local";
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
