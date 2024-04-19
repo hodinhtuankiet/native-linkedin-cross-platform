@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, ScrollView, Pressable } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import UserChat from "../../../components/UserChat";
+import UserChat from "./UserChat";
 const IP_ADDRESS = "http://192.168.1.11:3000";
 import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";

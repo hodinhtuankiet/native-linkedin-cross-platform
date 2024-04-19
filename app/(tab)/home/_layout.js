@@ -5,6 +5,7 @@ export default function Layout() {
       <Stack.Screen name="index" />
       <Stack.Screen name="profile" />
       <Stack.Screen name="chat" />
+      <Stack.Screen name="ChatMessage" />
     </Stack>
   );
 }

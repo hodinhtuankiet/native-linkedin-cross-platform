@@ -18,7 +18,7 @@ import moment from "moment";
 import { useRouter } from "expo-router";
 import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
-
+import chat from "../../../components/chat";
 const IP_ADDRESS = "http://192.168.1.11:3000";
 
 const index = () => {
@@ -91,7 +91,7 @@ const index = () => {
           gap: 4,
         }}
       >
-        <Pressable onPress={() => router.push("/home/profile")}>
+        <Pressable onPress={() => router.push(chat)}>
           <Image
             style={{ width: 30, height: 30, borderRadius: 15 }}
             source={{ uri: user?.profileImage }}
@@ -119,7 +119,7 @@ const index = () => {
           <TextInput placeholder="Search" />
         </Pressable>
 
-        <Pressable onPress={() => router.push("/home/chat")}>
+        <Pressable onPress={() => router.push("/components/chat")}>
           <Ionicons name="chatbox-ellipses-outline" size={24} color="black" />
         </Pressable>
       </View>
