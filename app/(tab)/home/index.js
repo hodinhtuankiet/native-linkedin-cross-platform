@@ -119,7 +119,7 @@ const index = () => {
           <TextInput placeholder="Search" />
         </Pressable>
 
-        <Pressable onPress={() => router.push("/components/chat")}>
+        <Pressable onPress={() => router.push("/home/chat")}>
           <Ionicons name="chatbox-ellipses-outline" size={24} color="black" />
         </Pressable>
       </View>

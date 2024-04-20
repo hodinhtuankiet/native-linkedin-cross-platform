@@ -26,7 +26,7 @@ import * as ImagePicker from "expo-image-picker";
 
 const ChatMessage = () => {
   return (
-    <KeyboardAvoidingView>
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: "#F0F0F0" }}>
       <ScrollView></ScrollView>
       <View
         style={{
@@ -60,9 +60,9 @@ const ChatMessage = () => {
           placeholder="Type Your message..."
         />
       </View>
-      <Entypo name="camera" size={24} color="gray" />
+      {/* <Entypo name="camera" size={24} color="gray" />
 
-      <Feather name="mic" size={24} color="gray" />
+      <Feather name="mic" size={24} color="gray" /> */}
     </KeyboardAvoidingView>
   );
 };

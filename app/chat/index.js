@@ -6,11 +6,11 @@ const IP_ADDRESS = "http://192.168.1.11:3000";
 import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 const ChatsScreen = () => {
   const [acceptedFriends, setAcceptedFriends] = useState([]);
-  const { userId, setUserId } = useState("");
-  const navigation = useNavigation();
+  const [userId, setUserId] = useState("");
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -29,23 +29,19 @@ const ChatsScreen = () => {
     };
     fetchUser();
   }, []);
-
   useEffect(() => {
-    const acceptedFriendsList = async () => {
-      try {
-        const response = await fetch(`${IP_ADDRESS}/connections/${userId}`);
-        const data = await response.json();
-
-        if (response.ok) {
-          setAcceptedFriends(data);
-        }
-      } catch (error) {
-        console.log("error showing the accepted friends", error);
-      }
-    };
-
-    acceptedFriendsList();
-  }, []);
+    if (userId) {
+      acceptedFriendsList();
+    }
+  }, [userId]);
+  const acceptedFriendsList = async () => {
+    try {
+      const response = await axios.get(`${IP_ADDRESS}/connections/${userId}`);
+      setAcceptedFriends(response.data.connections);
+    } catch (error) {
+      console.log("error showing the accepted friends", error);
+    }
+  };
   console.log("friends", acceptedFriends);
   return (
     <ScrollView showsVerticalScrollIndicator={false}>

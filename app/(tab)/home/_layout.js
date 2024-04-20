@@ -4,8 +4,20 @@ export default function Layout() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />
       <Stack.Screen name="profile" />
-      <Stack.Screen name="chat" />
-      <Stack.Screen name="ChatMessage" />
+      <Stack.Screen
+        name="chat"
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="ChatMessage"
+        options={{
+          headerShown: true,
+          tabBarStyle: { display: "none" },
+          tabBarButton: () => null,
+        }}
+      />
     </Stack>
   );
 }
