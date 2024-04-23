@@ -18,8 +18,8 @@ import axios from "axios";
 import { useRouter } from "expo-router";
 import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
-const IP_ADDRESS = "http://192.168.1.11:3000";
-
+// const IP_ADDRESS = "http://192.168.1.11:3000";
+import { WHITELIST_DOMAINS } from "../../../utils/constant";
 const index = () => {
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
@@ -58,7 +58,10 @@ const index = () => {
         userId: userId,
       };
 
-      const response = await axios.post(`${IP_ADDRESS}/create`, postData);
+      const response = await axios.post(
+        `${WHITELIST_DOMAINS}/create`,
+        postData
+      );
 
       console.log("post created", response.data);
       if (response.status === 201) {

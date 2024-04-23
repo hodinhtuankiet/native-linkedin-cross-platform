@@ -27,7 +27,7 @@ const sendMessage = async (req, res, next) => {
 const fetchMessageBetweenTwoPeople = async (req, res, next) => {
   try {
     const { senderId, recepientId } = req.params;
-
+    // $or It searches for messages where
     const messages = await Message.find({
       $or: [
         { senderId: senderId, recepientId: recepientId },

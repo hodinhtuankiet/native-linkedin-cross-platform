@@ -18,7 +18,7 @@ Router.route("/").post(
   messageController.sendMessage
 );
 
-Router.route("/:senderId/:recepientId").post(
+Router.route("/:senderId/:recepientId").get(
   messageController.fetchMessageBetweenTwoPeople
 );
 

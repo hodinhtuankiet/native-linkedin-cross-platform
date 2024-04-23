@@ -9,6 +9,8 @@ import { StyleSheet, Text, View, Pressable, FlatList } from "react-native";
 import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
 import ConnectionRequest from "../../../components/ConnectionRequest";
+import { WHITELIST_DOMAINS } from "../../../utils/constant";
+
 const Index = () => {
   const [userId, setUserId] = useState("");
   const [user, setUser] = useState();
@@ -46,7 +48,9 @@ const Index = () => {
   // lấy profile của người đang sử dụng
   const fetchUserProfile = async () => {
     try {
-      const response = await axios.get(`${IP_ADDRESS}/profile/${userId}`);
+      const response = await axios.get(
+        `${WHITELIST_DOMAINS}/profile/${userId}`
+      );
       const userData = response.data.user;
       // set data vào
       setUser(userData);
@@ -57,7 +61,7 @@ const Index = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get(`${IP_ADDRESS}/users/${userId}`);
+      const response = await axios.get(`${WHITELIST_DOMAINS}/users/${userId}`);
       setUsers(response.data);
     } catch (error) {
       console.log(error);
@@ -67,7 +71,7 @@ const Index = () => {
   const fetchFriendRequests = async () => {
     try {
       const response = await axios.get(
-        `${IP_ADDRESS}/connection-request/${userId}`
+        `${WHITELIST_DOMAINS}/connection-request/${userId}`
       );
       if (response.status === 200) {
         const connectionRequestsData = response.data?.map((friendRequest) => ({
@@ -115,7 +119,9 @@ const Index = () => {
           justifyContent: "space-between",
         }}
       >
-        <Text style={{ fontSize: 16, fontWeight: "600" }}>Invitations (0)</Text>
+        <Text style={{ fontSize: 16, fontWeight: "600" }}>
+          Invitations ({connectionRequests?.length})
+        </Text>
         <AntDesign name="arrowright" size={22} color="black" />
       </View>
 

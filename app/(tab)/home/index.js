@@ -19,12 +19,13 @@ import { useRouter } from "expo-router";
 import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
 import chat from "../../../components/chat";
-const IP_ADDRESS = "http://192.168.1.11:3000";
+import { WHITELIST_DOMAINS } from "../../../utils/constant";
 
 const index = () => {
   const [userId, setUserId] = useState("");
   const [user, setUser] = useState();
   const [posts, setPosts] = useState([]);
+  //AsyncStorage fetch userid and set userid
   useEffect(() => {
     const fetchUser = async () => {
       const token = await AsyncStorage.getItem("authToken");
@@ -42,17 +43,20 @@ const index = () => {
   }, [userId]);
   const fetchUserProfile = async () => {
     try {
-      const response = await axios.get(`${IP_ADDRESS}/profile/${userId}`);
+      const response = await axios.get(
+        `${WHITELIST_DOMAINS}/profile/${userId}`
+      );
       const userData = response.data.user;
       setUser(userData);
     } catch (error) {
       console.log("error fetching user profile", error);
     }
   };
+  // fetch all post of user
   useEffect(() => {
     const fetchAllPosts = async () => {
       try {
-        const response = await axios.get(`${IP_ADDRESS}/all`);
+        const response = await axios.get(`${WHITELIST_DOMAINS}/all`);
         setPosts(response.data.posts);
       } catch (error) {
         console.log("error fetching posts", error);
@@ -67,10 +71,12 @@ const index = () => {
     setShowfullText(!showfullText);
   };
   const [isLiked, setIsLiked] = useState(false);
+  // handle like/unlike post
+  // get userId liked & postId
   const handleLikePost = async (postId) => {
     try {
       const response = await axios.post(
-        `${IP_ADDRESS}/like/${postId}/${userId}`
+        `${WHITELIST_DOMAINS}/like/${postId}/${userId}`
       );
       if (response.status === 200) {
         const updatedPost = response.data.post;
@@ -91,13 +97,14 @@ const index = () => {
           gap: 4,
         }}
       >
-        <Pressable onPress={() => router.push(chat)}>
+        {/* Navigation to profile user  */}
+        <Pressable onPress={() => router.push("/home/profile")}>
           <Image
             style={{ width: 30, height: 30, borderRadius: 15 }}
             source={{ uri: user?.profileImage }}
           />
         </Pressable>
-
+        {/* TextInput  */}
         <Pressable
           style={{
             flexDirection: "row",
@@ -118,7 +125,7 @@ const index = () => {
           />
           <TextInput placeholder="Search" />
         </Pressable>
-
+        {/* Navigation to chat  */}
         <Pressable onPress={() => router.push("/home/chat")}>
           <Ionicons name="chatbox-ellipses-outline" size={24} color="black" />
         </Pressable>
@@ -135,6 +142,7 @@ const index = () => {
               }}
               key={index}
             >
+              {/* View show profileName and Date  */}
               <View
                 style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
               >
@@ -164,7 +172,7 @@ const index = () => {
                   </Text>
                 </View>
               </View>
-
+              {/* View show 3 dots and delete  */}
               <View
                 style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
               >
@@ -173,7 +181,7 @@ const index = () => {
                 <Feather name="x" size={20} color="black" />
               </View>
             </View>
-
+            {/* Description Artical and see more  */}
             <View
               style={{ marginTop: 10, marginHorizontal: 10, marginBottom: 12 }}
             >
@@ -185,7 +193,7 @@ const index = () => {
               </Text>
               {!showfullText && (
                 <Pressable onPress={toggleShowFullText}>
-                  <Text>See more</Text>
+                  <Text style={{ color: "blue" }}>See more</Text>
                 </Pressable>
               )}
             </View>
@@ -194,7 +202,7 @@ const index = () => {
               style={{ width: "100%", height: 240 }}
               source={{ uri: item?.imageUrl }}
             />
-
+            {/* Length Like  */}
             {item?.likes?.length > 0 && (
               <View
                 style={{
@@ -216,7 +224,6 @@ const index = () => {
                 borderWidth: 2,
               }}
             />
-
             <View
               style={{
                 flexDirection: "row",
@@ -225,6 +232,7 @@ const index = () => {
                 marginVertical: 10,
               }}
             >
+              {/* Handle Like  */}
               <Pressable onPress={() => handleLikePost(item?._id)}>
                 <AntDesign
                   style={{ textAlign: "center" }}
@@ -243,6 +251,7 @@ const index = () => {
                   Like
                 </Text>
               </Pressable>
+              {/* Handle Comment  */}
               <Pressable>
                 <FontAwesome
                   name="comment-o"
@@ -261,6 +270,7 @@ const index = () => {
                   Comment
                 </Text>
               </Pressable>
+              {/* Handle Repost  */}
               <Pressable>
                 <AntDesign
                   style={{ textAlign: "center" }}
@@ -276,9 +286,10 @@ const index = () => {
                     color: "gray",
                   }}
                 >
-                  repost
+                  Repost
                 </Text>
               </Pressable>
+              {/* Handle Send  */}
               <Pressable>
                 <Feather name="send" size={20} color="gray" />
                 <Text style={{ marginTop: 2, fontSize: 12, color: "gray" }}>

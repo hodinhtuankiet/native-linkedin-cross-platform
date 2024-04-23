@@ -7,6 +7,7 @@ import { AntDesign, Entypo, Feather } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
 import axios from "axios";
 import moment from "moment";
+import { WHITELIST_DOMAINS } from "../../../utils/constant";
 
 const IP_ADDRESS = "http://192.168.1.11:3000";
 
@@ -38,7 +39,9 @@ const connections = () => {
 
   const fetchConnections = async () => {
     try {
-      const reponse = await axios.get(`${IP_ADDRESS}/connections/${userId}`);
+      const reponse = await axios.get(
+        `${WHITELIST_DOMAINS}/connections/${userId}`
+      );
       setConnections(reponse.data.connections);
     } catch (error) {
       console.log(error);

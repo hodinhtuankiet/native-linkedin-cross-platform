@@ -7,7 +7,7 @@ import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 
 const getTabBarVisibility = (route) => {
   const routeName = getFocusedRouteNameFromRoute(route);
-  console.log(routeName);
+  // console.log(routeName);
   if (routeName?.includes("chat") || routeName?.includes("ChatMessage")) {
     return "none";
   }
@@ -65,7 +65,7 @@ export default function Layout() {
           tabBarLabel: "Profile",
           tabBarStyle: { display: "none" },
           tabBarLabelStyle: { color: "#0984e3" },
-          // headerShown: true,
+          headerShown: false,
           tabBarIcon: ({ focused }) =>
             focused ? (
               <AntDesign name="profile" size={24} color="black" />

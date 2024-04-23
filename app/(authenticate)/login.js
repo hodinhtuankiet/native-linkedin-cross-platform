@@ -62,10 +62,8 @@ const login = () => {
     >
       <View>
         <Image
-          style={{ width: 150, height: 100, resizeMode: "contain" }}
-          source={{
-            uri: "https://www.freepnglogos.com/uploads/linkedin-logo-transparent-png-25.png",
-          }}
+          style={{ width: 150, height: 150, resizeMode: "contain" }}
+          source={require("../../assets/buns.png")}
         />
       </View>
 
@@ -83,7 +81,7 @@ const login = () => {
           </Text>
         </View>
 
-        <View style={{ marginTop: 70 }}>
+        <View style={{ marginTop: 60 }}>
           <View
             style={{
               flexDirection: "row",
@@ -157,7 +155,7 @@ const login = () => {
           >
             <Text>Keep me logged in</Text>
 
-            <Text style={{ color: "#007FFF", fontWeight: "500" }}>
+            <Text style={{ color: "#f39c12", fontWeight: "500" }}>
               Forgot Password
             </Text>
           </View>
@@ -168,7 +166,7 @@ const login = () => {
             onPress={handleLogin}
             style={{
               width: 200,
-              backgroundColor: "#0072b1",
+              backgroundColor: "#f39c12",
               borderRadius: 6,
               marginLeft: "auto",
               marginRight: "auto",

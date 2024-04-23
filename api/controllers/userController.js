@@ -24,7 +24,7 @@ const findIdByUserId = async (req, res, next) => {
       "connections",
       "_id"
     );
-    console.log("loggedInuser sau khi populate: ", loggedInuser);
+    // console.log("loggedInuser sau khi populate: ", loggedInuser);
     if (!loggedInuser) {
       return res.status(400).json({ message: "User not found" });
     }

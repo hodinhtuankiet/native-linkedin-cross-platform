@@ -21,6 +21,7 @@ import {
 import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
 const IP_ADDRESS = "http://192.168.1.11:3000";
+import { WHITELIST_DOMAINS } from "../../../utils/constant";
 
 const profile = () => {
   const [userId, setUserId] = useState("");
@@ -44,7 +45,9 @@ const profile = () => {
   }, [userId]);
   const fetchUserProfile = async () => {
     try {
-      const response = await axios.get(`${IP_ADDRESS}/profile/${userId}`);
+      const response = await axios.get(
+        `${WHITELIST_DOMAINS}/profile/${userId}`
+      );
       const userData = response.data.user;
       setUser(userData);
     } catch (error) {
@@ -54,9 +57,12 @@ const profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const handleSaveDescription = async () => {
     try {
-      const response = await axios.put(`${IP_ADDRESS}/profile/${userId}`, {
-        userDescription,
-      });
+      const response = await axios.put(
+        `${WHITELIST_DOMAINS}/profile/${userId}`,
+        {
+          userDescription,
+        }
+      );
 
       if (response.status === 200) {
         await fetchUserProfile();

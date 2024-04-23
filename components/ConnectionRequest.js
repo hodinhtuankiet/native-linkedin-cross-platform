@@ -3,6 +3,7 @@ import React from "react";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 const IP_ADDRESS = "http://192.168.1.11:3000";
+import { WHITELIST_DOMAINS } from "../utils/constant";
 
 const ConnectionRequest = ({
   item,
@@ -12,16 +13,19 @@ const ConnectionRequest = ({
 }) => {
   const acceptConnection = async (requestId) => {
     try {
-      const response = await fetch(`${IP_ADDRESS}/connection-request/accept`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          senderId: requestId,
-          recepientId: userId,
-        }),
-      });
+      const response = await fetch(
+        `${WHITELIST_DOMAINS}/connection-request/accept`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            senderId: requestId,
+            recepientId: userId,
+          }),
+        }
+      );
 
       if (response.ok) {
         setConnectionRequests(

@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import ChatMessage from "./ChatMessage";
 import { useRouter } from "expo-router";
+import { WHITELIST_DOMAINS } from "../utils/constant";
 
 const UserChat = ({ item }) => {
   const [userId, setUserId] = useState("");

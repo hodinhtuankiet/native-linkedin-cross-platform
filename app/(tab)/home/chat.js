@@ -1,17 +1,21 @@
 import { StyleSheet, Text, View, ScrollView, Pressable } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import UserChat from "../../../components/UserChat";
-const IP_ADDRESS = "http://192.168.1.11:3000";
 import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+const IP_ADDRESS = "http://192.168.1.11:3000";
+import { Ionicons } from "@expo/vector-icons";
+import { WHITELIST_DOMAINS } from "../../../utils/constant";
 
 const ChatsScreen = () => {
   const [acceptedFriends, setAcceptedFriends] = useState([]);
   const [userId, setUserId] = useState("");
+  const navigation = useNavigation();
 
+  // fetch userid and set userid
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -34,15 +38,33 @@ const ChatsScreen = () => {
       acceptedFriendsList();
     }
   }, [userId]);
+  // fetch all friends accepted connections
   const acceptedFriendsList = async () => {
     try {
-      const response = await axios.get(`${IP_ADDRESS}/connections/${userId}`);
+      const response = await axios.get(
+        `${WHITELIST_DOMAINS}/connections/${userId}`
+      );
       setAcceptedFriends(response.data.connections);
     } catch (error) {
       console.log("error showing the accepted friends", error);
     }
   };
-  console.log("friends", acceptedFriends);
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: "",
+      headerLeft: () => (
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+          <Ionicons
+            onPress={() => navigation.goBack()}
+            name="arrow-back"
+            size={24}
+            color="black"
+          />
+        </View>
+      ),
+    });
+  }, [navigation]);
+  // console.log("friends", acceptedFriends);
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <Pressable>
