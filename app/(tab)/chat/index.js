@@ -1,12 +1,12 @@
 import { StyleSheet, Text, View, ScrollView, Pressable } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import UserChat from "../../components/UserChat";
+import UserChat from "../../../components/UserChat";
 import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { WHITELIST_DOMAINS } from "../../utils/constant";
+import { WHITELIST_DOMAINS } from "../../../utils/constant";
 
 const ChatsScreen = () => {
   const [acceptedFriends, setAcceptedFriends] = useState([]);
@@ -34,6 +34,7 @@ const ChatsScreen = () => {
       acceptedFriendsList();
     }
   }, [userId]);
+  // fetch all friends accepted connections
   const acceptedFriendsList = async () => {
     try {
       const response = await axios.get(

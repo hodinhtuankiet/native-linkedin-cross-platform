@@ -4,7 +4,7 @@ import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import Home from "./home/index";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
-
+import { Feather } from "@expo/vector-icons";
 const getTabBarVisibility = (route) => {
   const routeName = getFocusedRouteNameFromRoute(route);
   // console.log(routeName);
@@ -19,60 +19,76 @@ export default function Layout() {
       <Tabs.Screen
         name="home"
         options={({ route }) => ({
-          tabBarStyle: { display: getTabBarVisibility(route) },
-          tabBarLabel: "Home",
-          tabBarLabelStyle: { color: "#0984e3" },
+          tabBarStyle: { display: getTabBarVisibility(route), height: 66 }, // Adjust the height as per your requirement
+          tabBarShowLabel: false,
           headerShown: false,
           tabBarIcon: ({ focused }) =>
             focused ? (
-              <Entypo name="home" size={24} color="black" />
+              <Entypo name="home" size={26} color="black" />
             ) : (
-              <AntDesign name="home" size={24} color="black" />
+              <AntDesign name="home" size={26} color="black" />
             ),
         })}
       />
       <Tabs.Screen
         name="network"
-        options={{
-          tabBarLabel: "Network",
+        options={({ route }) => ({
           tabBarLabelStyle: { color: "#0984e3" },
           headerShown: false,
+          tabBarStyle: { display: getTabBarVisibility(route), height: 66 },
+          tabBarShowLabel: false,
           tabBarIcon: ({ focused }) =>
             focused ? (
-              <Ionicons name="people" size={24} color="black" />
+              <Ionicons name="people" size={26} color="black" />
             ) : (
-              <Ionicons name="people-outline" size={24} color="black" />
+              <Ionicons name="people-outline" size={26} color="black" />
             ),
-        }}
+        })}
       />
       <Tabs.Screen
         name="post"
-        options={{
-          tabBarLabel: "Post",
+        options={({ route }) => ({
           tabBarLabelStyle: { color: "#0984e3" },
           headerShown: false,
           tabBarIcon: ({ focused }) =>
             focused ? (
-              <AntDesign name="plussquare" size={24} color="black" />
+              <AntDesign name="plussquare" size={26} color="black" />
             ) : (
-              <AntDesign name="plussquareo" size={24} color="black" />
+              <AntDesign name="plussquareo" size={26} color="black" />
             ),
-        }}
+        })}
       />
       <Tabs.Screen
         name="profile/index"
-        options={{
-          tabBarLabel: "Profile",
+        options={({ route }) => ({
+          tabBarStyle: { display: getTabBarVisibility(route), height: 66 }, // Adjust the height as per your requirement
+          tabBarShowLabel: false,
           tabBarStyle: { display: "none" },
           tabBarLabelStyle: { color: "#0984e3" },
           headerShown: false,
           tabBarIcon: ({ focused }) =>
             focused ? (
-              <AntDesign name="profile" size={24} color="black" />
+              <AntDesign name="user" size={26} color="black" />
             ) : (
-              <AntDesign name="profile" size={24} color="black" />
+              <AntDesign name="user" size={26} color="black" />
             ),
-        }}
+        })}
+      />
+      <Tabs.Screen
+        name="chat"
+        options={({ route }) => ({
+          tabBarStyle: { display: getTabBarVisibility(route), height: 66 }, // Adjust the height as per your requirement
+          tabBarShowLabel: false,
+          tabBarStyle: { display: "none" },
+          tabBarLabelStyle: { color: "#0984e3" },
+          headerShown: false,
+          tabBarIcon: ({ focused }) =>
+            focused ? (
+              <Feather name="message-square" size={26} color="black" />
+            ) : (
+              <Feather name="message-square" size={26} color="black" />
+            ),
+        })}
       />
     </Tabs>
   );

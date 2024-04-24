@@ -6,6 +6,7 @@ import Message from "../models/message.js";
 
 const sendMessage = async (req, res, next) => {
   try {
+    // senderId, recepientId, messageType, messageText matches with formData.append ChatMessage
     const { senderId, recepientId, messageType, messageText } = req.body;
 
     const newMessage = new Message({
@@ -29,10 +30,14 @@ const fetchMessageBetweenTwoPeople = async (req, res, next) => {
     const { senderId, recepientId } = req.params;
     // $or It searches for messages where
     const messages = await Message.find({
+      // tìm kiếm trong cơ sở dữ liệu những tin nhắn mà senderId hoặc recepientId trùng khớp
+      // với senderId và recepientId từ request hoặc ngược lại.
       $or: [
         { senderId: senderId, recepientId: recepientId },
         { senderId: recepientId, recepientId: senderId },
       ],
+      // vì senderId trong model có ref đến User
+      // nên populate field senderId với _id và name của Model User
     }).populate("senderId", "_id name");
 
     res.json(messages);

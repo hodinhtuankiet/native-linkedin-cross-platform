@@ -44,21 +44,7 @@ const ChatMessage = () => {
   const navigation = useNavigation();
   // các message của 2 user chat together
   const [messages, setMessages] = useState([]);
-  // fetch userId & setUserId
-  useEffect(() => {
-    const fetchRecepientData = async () => {
-      try {
-        const response = await axios.get(
-          `${WHITELIST_DOMAINS}/profile/${recepientId}`
-        );
-        const userData = response.data.user;
-        setRecepientData(userData);
-      } catch (error) {
-        console.log("error retrieving details", error);
-      }
-    };
-    fetchRecepientData();
-  }, [recepientId]);
+  // fetch profile of recepient (name , email)
   // get userId & setUserId through AsyncStorage
   useEffect(() => {
     const fetchUser = async () => {
@@ -77,28 +63,48 @@ const ChatMessage = () => {
     };
     fetchUser();
   }, []);
-  const fetchMessages = async () => {
-    try {
-      const response = await fetch(
-        `${WHITELIST_DOMAINS}/messages/${userId}/${recepientId}`
-      );
-      const data = await response.json();
+  // fetch all message between 2 users
 
-      if (response.ok) {
-        setMessages(data);
-      } else {
-        console.log("error showing messags", response.status.message);
-      }
-    } catch (error) {
-      console.log("error fetching messages", error);
-    }
-  };
   useEffect(() => {
-    fetchMessages();
-  }, []);
+    const fetchRecepientData = async () => {
+      try {
+        const response = await axios.get(
+          `${WHITELIST_DOMAINS}/profile/${recepientId}`
+        );
+        const userData = response.data.user;
+        setRecepientData(userData);
+      } catch (error) {
+        console.log("error retrieving details", error);
+      }
+    };
+    fetchRecepientData();
+  }, [recepientId]);
+
   const handleEmojiPress = () => {
     setShowEmojiSelector(!showEmojiSelector);
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      if (userId && recepientId) {
+        try {
+          const response = await fetch(
+            `${WHITELIST_DOMAINS}/messages/${userId}/${recepientId}`
+          );
+          const data = await response.json();
+          if (response.ok) {
+            setMessages(data);
+          } else {
+            console.log("error showing messages", response.status.message);
+          }
+        } catch (error) {
+          console.log("error fetching messages", error);
+        }
+      }
+    };
+
+    fetchData();
+  }, [userId, recepientId]);
+
   // handle send image & text
   const handleSend = async (messageType, imageUri) => {
     try {
@@ -125,13 +131,15 @@ const ChatMessage = () => {
         // sau khi post text or image thì set lại rỗng
         setMessage("");
         setSelectedImage("");
+        // hàm post text or image
+        fetchMessages();
       }
     } catch (error) {
       console.log("error in sending the message", error);
     }
   };
-  console.log("all message", messages);
   // UI Header Chat And Icon Navigation Back
+  console.log("all message", messages);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: "",
@@ -165,10 +173,59 @@ const ChatMessage = () => {
     //  Mỗi khi một trong các giá trị
     // trong mảng này thay đổi, hàm trong useLayoutEffect sẽ được thực thi lại
   }, [navigation, recepientData]);
-
+  const formatTime = (time) => {
+    const options = { hour: "numeric", minute: "numeric" };
+    return new Date(time).toLocaleString("en-US", options);
+  };
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: "#F0F0F0" }}>
-      <ScrollView></ScrollView>
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: "#ffbe76" }}>
+      <ScrollView>
+        {messages.map((item, index) => {
+          if (item?.messageType === "text") {
+            console.log(item?.message);
+            return (
+              // xử lí nếu tin nhắn là của người nhận thì nằm bên trái và ngược lại
+              // css màu và font của text
+              <Pressable
+                key={index}
+                style={[
+                  // nếu data của messages.senderId === userId là mình thì tin nhắn hiển thị bên phải
+                  item?.senderId?._id === userId
+                    ? {
+                        alignSelf: "flex-end",
+                        backgroundColor: "#DCF8C6",
+                        padding: 8,
+                        maxWidth: "60%",
+                        borderRadius: 7,
+                        margin: 10,
+                      }
+                    : {
+                        alignSelf: "flex-start",
+                        backgroundColor: "white",
+                        padding: 8,
+                        margin: 10,
+                        borderRadius: 7,
+                        maxWidth: "60%",
+                      },
+                ]}
+              >
+                <Text style={{ fontSize: 13 }}> {item?.message} </Text>
+                <Text
+                  style={{
+                    textAlign: "right",
+                    fontSize: 9,
+                    color: "gray",
+                    marginTop: 5,
+                  }}
+                >
+                  {formatTime(item?.timeStamp)}
+                </Text>
+              </Pressable>
+            );
+          }
+        })}
+      </ScrollView>
+      {/* UI Bottom Text  */}
       <View
         style={{
           flexDirection: "row",
