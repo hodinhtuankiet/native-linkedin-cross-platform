@@ -50,6 +50,7 @@ export default function Layout() {
         options={({ route }) => ({
           tabBarLabelStyle: { color: "#0984e3" },
           headerShown: false,
+          tabBarShowLabel: false,
           tabBarIcon: ({ focused }) =>
             focused ? (
               <AntDesign name="plussquare" size={26} color="black" />

@@ -21,7 +21,6 @@ import { FontAwesome } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 // import EmojiSelector from "react-native-emoji-selector";
-import * as ImagePicker from "expo-image-picker";
 import EmojiSelector from "react-native-emoji-selector";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
@@ -29,10 +28,12 @@ import "core-js/stable/atob";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import { WHITELIST_DOMAINS } from "../../../utils/constant";
+import * as ImagePicker from "expo-image-picker";
 
 const ChatMessage = () => {
   const IP_ADDRESS = "http://192.168.1.11:3000";
   const [showEmojiSelector, setShowEmojiSelector] = useState(false);
+  const [showInputText, setShowInputText] = useState(false);
   const [selectedMessages, setSelectedMessages] = useState([]);
   // Message này nằm trong textInput
   const [message, setMessage] = useState("");
@@ -83,26 +84,29 @@ const ChatMessage = () => {
   const handleEmojiPress = () => {
     setShowEmojiSelector(!showEmojiSelector);
   };
-  useEffect(() => {
-    const fetchData = async () => {
-      if (userId && recepientId) {
-        try {
-          const response = await fetch(
-            `${WHITELIST_DOMAINS}/messages/${userId}/${recepientId}`
-          );
-          const data = await response.json();
-          if (response.ok) {
-            setMessages(data);
-          } else {
-            console.log("error showing messages", response.status.message);
-          }
-        } catch (error) {
-          console.log("error fetching messages", error);
+  handleTextInputPress;
+  const handleTextInputPress = () => {
+    setShowInputText(!showInputText);
+  };
+  const fetchMessages = async () => {
+    if (userId && recepientId) {
+      try {
+        const response = await fetch(
+          `${WHITELIST_DOMAINS}/messages/${userId}/${recepientId}`
+        );
+        const data = await response.json();
+        if (response.ok) {
+          setMessages(data);
+        } else {
+          console.log("error showing messages", response.status.message);
         }
+      } catch (error) {
+        console.log("error fetching messages", error);
       }
-    };
-
-    fetchData();
+    }
+  };
+  useEffect(() => {
+    fetchMessages();
   }, [userId, recepientId]);
 
   // handle send image & text
@@ -139,7 +143,6 @@ const ChatMessage = () => {
     }
   };
   // UI Header Chat And Icon Navigation Back
-  console.log("all message", messages);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: "",
@@ -177,12 +180,23 @@ const ChatMessage = () => {
     const options = { hour: "numeric", minute: "numeric" };
     return new Date(time).toLocaleString("en-US", options);
   };
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    console.log(result);
+    if (!result.canceled) {
+      handleSend("image", result.uri);
+    }
+  };
   return (
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: "#ffbe76" }}>
       <ScrollView>
         {messages.map((item, index) => {
           if (item?.messageType === "text") {
-            console.log(item?.message);
             return (
               // xử lí nếu tin nhắn là của người nhận thì nằm bên trái và ngược lại
               // css màu và font của text
@@ -223,6 +237,62 @@ const ChatMessage = () => {
               </Pressable>
             );
           }
+          if (item?.messageType === "image") {
+            const baseUrl = "/native/api/files/";
+            // ex: "https://example.com/images/photo.jpg"
+            const imageUrl = item.imageUrl;
+            // sau khi split('/'), mảng kết quả sẽ là ["https:", "", "example.com", "images", "photo.jpg"],
+            // pop() xóa phần tử cuối cùng của mảng và trả về giá trị của phần tử đó
+            // --> photo.jpg
+            const filename = imageUrl.split("/").pop();
+            console.log("filename", filename);
+            const source = { url: baseUrl + filename };
+            // Image
+            return (
+              <Pressable
+                key={index}
+                style={[
+                  item?.senderId?._id === userId
+                    ? {
+                        alignSelf: "flex-end",
+                        backgroundColor: "#DCF8C6",
+                        padding: 8,
+                        maxWidth: "60%",
+                        borderRadius: 7,
+                        margin: 10,
+                      }
+                    : {
+                        alignSelf: "flex-start",
+                        backgroundColor: "white",
+                        padding: 8,
+                        margin: 10,
+                        borderRadius: 7,
+                        maxWidth: "60%",
+                      },
+                ]}
+              >
+                <View>
+                  <Image
+                    source={source}
+                    style={{ width: 200, height: 200, borderRadius: 7 }}
+                  />
+                  <Text
+                    style={{
+                      textAlign: "right",
+                      fontSize: 9,
+                      position: "absolute",
+                      right: 10,
+                      bottom: 7,
+                      color: "white",
+                      marginTop: 5,
+                    }}
+                  >
+                    {formatTime(item?.timeStamp)}
+                  </Text>
+                </View>
+              </Pressable>
+            );
+          }
         })}
       </ScrollView>
       {/* UI Bottom Text  */}
@@ -235,6 +305,7 @@ const ChatMessage = () => {
           borderTopWidth: 1,
           borderTopColor: "#dddddd",
           marginBottom: showEmojiSelector ? 0 : 25,
+          // height: showInputText ? 250 : 50,
         }}
       >
         <Entypo
@@ -245,6 +316,7 @@ const ChatMessage = () => {
           color="gray"
         />
         <TextInput
+          onPress={handleTextInputPress}
           value={message}
           onChangeText={(text) => setMessage(text)}
           style={{
@@ -265,12 +337,7 @@ const ChatMessage = () => {
             marginHorizontal: 8,
           }}
         >
-          <Entypo
-            // onPress={pickImage}
-            name="camera"
-            size={24}
-            color="gray"
-          />
+          <Entypo onPress={pickImage} name="camera" size={24} color="gray" />
           <Feather name="mic" size={24} color="gray" />
         </View>
         <Pressable

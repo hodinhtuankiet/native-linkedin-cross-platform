@@ -17,6 +17,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import axios from "axios";
 const IP_ADDRESS = "http://192.168.1.11:3000";
+import { WHITELIST_DOMAINS } from "../../utils/constant";
 
 const register = () => {
   const [email, setEmail] = useState("");
@@ -34,7 +35,7 @@ const register = () => {
     };
     console.log(user);
     axios
-      .post(`${IP_ADDRESS}/register`, user)
+      .post(`${WHITELIST_DOMAINS}/register`, user)
       .then((response) => {
         console.log(response);
         Alert.alert(

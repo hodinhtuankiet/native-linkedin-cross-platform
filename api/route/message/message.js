@@ -5,10 +5,12 @@ import { messageController } from "../../controllers/messageController";
 const Router = express.Router();
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/"); // Đường dẫn lưu trữ tệp
+    cb(null, "files/"); // Specify the desired destination folder
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname);
+    // Generate a unique filename for the uploaded file
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, uniqueSuffix + "-" + file.originalname);
   },
 });
 const upload = multer({ storage: storage });

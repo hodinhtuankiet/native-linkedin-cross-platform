@@ -15,6 +15,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { WHITELIST_DOMAINS } from "../../utils/constant";
 
 const IP_ADDRESS = "http://192.168.1.11:3000";
 
@@ -45,7 +46,7 @@ const login = () => {
     };
     console.log(user);
     try {
-      const response = await axios.post(`${IP_ADDRESS}/login`, user);
+      const response = await axios.post(`${WHITELIST_DOMAINS}/login`, user);
       console.log("Login response:", response.data);
       const token = response.data.token;
       // Lưu token vào AsyncStorage với key là "authToken"
