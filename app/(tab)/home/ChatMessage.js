@@ -45,7 +45,6 @@ const ChatMessage = () => {
   const navigation = useNavigation();
   // các message của 2 user chat together
   const [messages, setMessages] = useState([]);
-  // fetch profile of recepient (name , email)
   // get userId & setUserId through AsyncStorage
   useEffect(() => {
     const fetchUser = async () => {
@@ -64,8 +63,7 @@ const ChatMessage = () => {
     };
     fetchUser();
   }, []);
-  // fetch all message between 2 users
-
+  // fetch profile of recepient (name , email)
   useEffect(() => {
     const fetchRecepientData = async () => {
       try {
@@ -88,6 +86,7 @@ const ChatMessage = () => {
   const handleTextInputPress = () => {
     setShowInputText(!showInputText);
   };
+  // fetch all message between 2 users
   const fetchMessages = async () => {
     if (userId && recepientId) {
       try {
@@ -109,6 +108,47 @@ const ChatMessage = () => {
     fetchMessages();
   }, [userId, recepientId]);
 
+  const handleSelectedMessage = (message) => {
+    const isSelected = selectedMessages.includes(message._id);
+    if (isSelected) {
+      setSelectedMessages((prev) => prev.filter((id) => id !== message._id));
+    } else {
+      // id của message
+      setSelectedMessages((prev) => [...prev, message._id]);
+    }
+    console.log(selectedMessages);
+  };
+
+  const deleteMessageApi = async (messageIds) => {
+    // messageIds là data selectedMessages
+    try {
+      const response = await fetch(`${WHITELIST_DOMAINS}/deleteMessage`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ messages: messageIds }),
+      });
+
+      if (response.ok) {
+        // filters out the IDs of messages that are in the selectedMessages array
+        // but are not included in the messageIds array
+        // khi này thì messageIds đã bị xóa
+        // lóc ra messageIds không bao gồm messageOld -> rỗng
+        // prevMessages rỗng -> đã bị xóa
+        setSelectedMessages((prevMessages) =>
+          prevMessages.filter((messageOld) => !messageIds.includes(messageOld))
+        );
+        // fetch all messages lại
+        fetchMessages();
+      } else {
+        const errorResponse = await response.json(); // Parsing the error response as JSON
+        console.log("Error Response Body:", errorResponse);
+      }
+    } catch (error) {
+      console.log("error delete Message Api", error);
+    }
+  };
   // handle send image & text
   const handleSend = async (messageType, imageUri) => {
     try {
@@ -142,6 +182,8 @@ const ChatMessage = () => {
       console.log("error in sending the message", error);
     }
   };
+
+  console.log("message", selectedMessages);
   // UI Header Chat And Icon Navigation Back
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -154,7 +196,13 @@ const ChatMessage = () => {
             size={24}
             color="black"
           />
-          {recepientData && (
+          {selectedMessages.length > 0 ? (
+            <View>
+              <Text style={{ fontSize: 16, fontWeight: "500" }}>
+                {selectedMessages.length}
+              </Text>
+            </View>
+          ) : (
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Image
                 style={{
@@ -163,23 +211,45 @@ const ChatMessage = () => {
                   borderRadius: 15,
                   resizeMode: "cover",
                 }}
-                source={{ uri: recepientData.profileImage }}
+                source={{ uri: recepientData?.profileImage }}
               />
+
               <Text style={{ marginLeft: 5, fontSize: 15, fontWeight: "bold" }}>
-                {recepientData.name}
+                {recepientData?.name}
               </Text>
             </View>
           )}
         </View>
       ),
+      headerRight: () =>
+        selectedMessages.length > 0 ? (
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+            <Ionicons name="arrow-redo-outline" size={24} color="black" />
+            <Ionicons name="arrow-undo-outline" size={24} color="black" />
+            <FontAwesome name="star" size={24} color="black" />
+            <MaterialIcons
+              onPress={() => deleteMessageApi(selectedMessages)}
+              name="delete"
+              size={24}
+              color="black"
+            />
+          </View>
+        ) : (
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 15 }}>
+            <Feather name="phone-call" size={26} color="black" />
+            <Feather name="video" size={26} color="black" />
+          </View>
+        ),
     });
     //  Mỗi khi một trong các giá trị
     // trong mảng này thay đổi, hàm trong useLayoutEffect sẽ được thực thi lại
-  }, [navigation, recepientData]);
+  }, [navigation, recepientData, selectedMessages]);
+
   const formatTime = (time) => {
     const options = { hour: "numeric", minute: "numeric" };
     return new Date(time).toLocaleString("en-US", options);
   };
+
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -187,20 +257,26 @@ const ChatMessage = () => {
       aspect: [4, 3],
       quality: 1,
     });
+
     console.log(result);
     if (!result.canceled) {
-      handleSend("image", result.uri);
+      handleSend("image", result.assets[0].uri);
     }
   };
+
   return (
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: "#ffbe76" }}>
       <ScrollView>
         {messages.map((item, index) => {
           if (item?.messageType === "text") {
+            const isSelected = selectedMessages.includes(item._id);
             return (
               // xử lí nếu tin nhắn là của người nhận thì nằm bên trái và ngược lại
               // css màu và font của text
               <Pressable
+                onLongPress={() => {
+                  handleSelectedMessage(item);
+                }}
                 key={index}
                 style={[
                   // nếu data của messages.senderId === userId là mình thì tin nhắn hiển thị bên phải
@@ -221,6 +297,8 @@ const ChatMessage = () => {
                         borderRadius: 7,
                         maxWidth: "60%",
                       },
+                  // Marked text khi long press
+                  isSelected && { width: "100%", backgroundColor: "#F0FFFF" },
                 ]}
               >
                 <Text style={{ fontSize: 13 }}> {item?.message} </Text>
@@ -237,17 +315,11 @@ const ChatMessage = () => {
               </Pressable>
             );
           }
-          if (item?.messageType === "image") {
+          if (item.messageType === "image") {
             const baseUrl = "/native/api/files/";
-            // ex: "https://example.com/images/photo.jpg"
             const imageUrl = item.imageUrl;
-            // sau khi split('/'), mảng kết quả sẽ là ["https:", "", "example.com", "images", "photo.jpg"],
-            // pop() xóa phần tử cuối cùng của mảng và trả về giá trị của phần tử đó
-            // --> photo.jpg
             const filename = imageUrl.split("/").pop();
-            console.log("filename", filename);
-            const source = { url: baseUrl + filename };
-            // Image
+            const source = { uri: baseUrl + filename };
             return (
               <Pressable
                 key={index}

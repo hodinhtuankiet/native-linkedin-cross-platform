@@ -4,32 +4,52 @@ import { useNavigation } from "@react-navigation/native";
 import ChatMessage from "./ChatMessage";
 import { useRouter } from "expo-router";
 import { WHITELIST_DOMAINS } from "../utils/constant";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { jwtDecode } from "jwt-decode";
+import "core-js/stable/atob";
 const UserChat = ({ item }) => {
   const [userId, setUserId] = useState("");
   const [messages, setMessages] = useState([]);
   const navigation = useNavigation();
-  // const fetchMessages = async () => {
-  //   try {
-  //     const response = await fetch(
-  //       `http://localhost:8000/messages/${userId}/${item._id}`
-  //     );
-  //     const data = await response.json();
+  // get userId & setUserId through AsyncStorage
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const token = await AsyncStorage.getItem("authToken");
+        if (token) {
+          const decodedToken = jwtDecode(token);
+          const userId = decodedToken.userId;
+          setUserId(userId);
+        } else {
+          console.log("No token found");
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+    fetchUser();
+  }, []);
+  const fetchMessages = async () => {
+    try {
+      const response = await fetch(
+        `${WHITELIST_DOMAINS}/messages/${userId}/${item._id}`
+      );
+      const data = await response.json();
 
-  //     if (response.ok) {
-  //       setMessages(data);
-  //     } else {
-  //       console.log("error showing messags", response.status.message);
-  //     }
-  //   } catch (error) {
-  //     console.log("error fetching messages", error);
-  //   }
-  // };
+      if (response.ok) {
+        setMessages(data);
+      } else {
+        console.log("error showing messags", response.status.message);
+      }
+    } catch (error) {
+      console.log("error fetching messages", error);
+    }
+  };
 
-  // useEffect(() => {
-  //   fetchMessages();
-  // }, []);
-  // console.log(messages);
+  useEffect(() => {
+    fetchMessages();
+  }, []);
+  console.log(messages);
 
   const getLastMessage = () => {
     const userMessages = messages.filter(
