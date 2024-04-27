@@ -25,6 +25,5 @@ Router.route("/").post(
 Router.route("/:senderId/:recepientId").get(
   messageController.fetchMessageBetweenTwoPeople
 );
-Router.route("/deleteMessage").delete(messageController.deleteMessage);
 
 export const messageRoute = Router;
