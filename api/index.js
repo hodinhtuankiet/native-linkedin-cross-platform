@@ -16,6 +16,7 @@ import cors from "cors";
 import "dotenv/config";
 import passport from "./node_modules/passports";
 import { Strategy as LocalStrategy } from "passport-local";
+import mime from "mime-types";
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));

@@ -46,7 +46,24 @@ const fetchMessageBetweenTwoPeople = async (req, res, next) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+const deleteMessage = async (req, res, next) => {
+  try {
+    const { messages } = req.body;
+    if (!Array.isArray(messages) || messages.length === 0) {
+      return res.status(500).json({ message: null });
+    }
+
+    await Message.deleteMany({ _id: { $in: messages } });
+
+    res.json({ message: "Message Delete Successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 export const messageController = {
   sendMessage,
   fetchMessageBetweenTwoPeople,
+  deleteMessage,
 };

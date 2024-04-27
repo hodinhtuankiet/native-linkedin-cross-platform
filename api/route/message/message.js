@@ -5,14 +5,16 @@ import { messageController } from "../../controllers/messageController";
 const Router = express.Router();
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "files/"); // Specify the desired destination folder
+    cb(null, "files/"); // Chỉ định thư mục đích mong muốn
   },
   filename: function (req, file, cb) {
-    // Generate a unique filename for the uploaded file
+    // Tạo một tên tệp duy nhất cho tệp được tải lên
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + "-" + file.originalname);
+    const fileExtension = file.originalname.split(".").pop(); // Lấy phần mở rộng của tên tệp
+    cb(null, uniqueSuffix + "-" + file.originalname); // Sử dụng phần mở rộng để xác định loại dữ liệu của tệp tin
   },
 });
+
 const upload = multer({ storage: storage });
 
 Router.route("/").post(
@@ -23,5 +25,6 @@ Router.route("/").post(
 Router.route("/:senderId/:recepientId").get(
   messageController.fetchMessageBetweenTwoPeople
 );
+Router.route("/deleteMessage").delete(messageController.deleteMessage);
 
 export const messageRoute = Router;
