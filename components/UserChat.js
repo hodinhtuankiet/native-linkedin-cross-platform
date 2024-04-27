@@ -1,16 +1,26 @@
-import { StyleSheet, Text, View, Pressable, Image } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import ChatMessage from "./ChatMessage";
-import { useRouter } from "expo-router";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TextInput,
+} from "react-native";
 import { WHITELIST_DOMAINS } from "../utils/constant";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
+import { AntDesign } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import ChatMessage from "./ChatMessage";
+
 const UserChat = ({ item }) => {
   const [userId, setUserId] = useState("");
   const [messages, setMessages] = useState([]);
   const navigation = useNavigation();
+
   // get userId & setUserId through AsyncStorage
   useEffect(() => {
     const fetchUser = async () => {
@@ -29,6 +39,7 @@ const UserChat = ({ item }) => {
     };
     fetchUser();
   }, []);
+
   const fetchMessages = async () => {
     try {
       const response = await fetch(
@@ -39,7 +50,7 @@ const UserChat = ({ item }) => {
       if (response.ok) {
         setMessages(data);
       } else {
-        console.log("error showing messags", response.status.message);
+        console.log("error showing messages", response.status.message);
       }
     } catch (error) {
       console.log("error fetching messages", error);
@@ -49,6 +60,7 @@ const UserChat = ({ item }) => {
   useEffect(() => {
     fetchMessages();
   }, []);
+
   console.log(messages);
 
   const getLastMessage = () => {
@@ -60,54 +72,63 @@ const UserChat = ({ item }) => {
 
     return userMessages[n - 1];
   };
+
   const lastMessage = getLastMessage();
-  console.log(lastMessage);
+
   const formatTime = (time) => {
     const options = { hour: "numeric", minute: "numeric" };
     return new Date(time).toLocaleString("en-US", options);
   };
+
   const router = useRouter();
 
   return (
-    <Pressable
-      onPress={() =>
-        navigation.navigate("ChatMessage", {
-          recepientId: item._id,
-        })
-      }
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 10,
-        borderWidth: 0.7,
-        borderColor: "#D0D0D0",
-        borderTopWidth: 0,
-        borderLeftWidth: 0,
-        borderRightWidth: 0,
-        padding: 10,
-      }}
-    >
-      <Image
-        style={{ width: 50, height: 50, borderRadius: 25, resizeMode: "cover" }}
-        source={{ uri: item?.profileImage }}
-      />
+    <View>
+      <Pressable
+        onPress={() =>
+          navigation.navigate("ChatMessage", {
+            recepientId: item._id,
+          })
+        }
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 10,
+          borderWidth: 0.7,
+          borderColor: "#D0D0D0",
+          borderTopWidth: 0,
+          borderLeftWidth: 0,
+          borderRightWidth: 0,
+          padding: 10,
+        }}
+      >
+        <Image
+          style={{
+            width: 50,
+            height: 50,
+            borderRadius: 25,
+            resizeMode: "cover",
+          }}
+          source={{ uri: item?.profileImage }}
+        />
 
-      <View style={{ flex: 1 }}>
-        <Text style={{ fontSize: 15, fontWeight: "500" }}>{item?.name}</Text>
-        {/* {lastMessage && (
-          <Text style={{ marginTop: 3, color: "gray", fontWeight: "500" }}>
-            {lastMessage?.message}
+        <View style={{ flex: 1 }}>
+          <Text style={{ fontSize: 15, fontWeight: "500" }}>{item?.name}</Text>
+          {/* {lastMessage && (
+            <Text style={{ marginTop: 3, color: "gray", fontWeight: "500" }}>
+              {lastMessage?.message}
+            </Text>
+          )} */}
+          <Text>Last message come here </Text>
+        </View>
+
+        {/* <View>
+          <Text style={{ fontSize: 11, fontWeight: "400", color: "#585858" }}>
+            {lastMessage && formatTime(lastMessage?.timeStamp)}
           </Text>
-        )} */}
-        <Text>Last message come here </Text>
-      </View>
-
-      {/* <View>
-        <Text style={{ fontSize: 11, fontWeight: "400", color: "#585858" }}>
-          {lastMessage && formatTime(lastMessage?.timeStamp)}
-        </Text>
-      </View> */}
-    </Pressable>
+        </View> */}
+      </Pressable>
+    </View>
   );
 };
 

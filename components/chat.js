@@ -46,6 +46,8 @@ const ChatsScreen = () => {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <Pressable>
+        <TextInput placeholder="Search" />
+        <Text>Xin chào</Text>
         {acceptedFriends.map((item, index) => (
           <UserChat key={index} item={item} />
         ))}

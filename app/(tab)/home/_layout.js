@@ -12,6 +12,16 @@ export default function Layout() {
           tabBarButton: () => null,
         }}
       />
+      <Stack.Screen
+        name="chat"
+        options={{
+          tabBarShowLabel: true,
+          headerTitle: "Đoạn chat",
+          // headerShown: true,
+          tabBarStyle: { display: "none" },
+          // tabBarButton: () => null,
+        }}
+      />
     </Stack>
   );
 }

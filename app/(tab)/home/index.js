@@ -112,7 +112,7 @@ const index = () => {
             marginHorizontal: 7,
             gap: 10,
             backgroundColor: "white",
-            borderRadius: 3,
+            borderRadius: 16,
             height: 30,
             flex: 1,
           }}

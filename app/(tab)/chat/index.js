@@ -1,17 +1,29 @@
-import { StyleSheet, Text, View, ScrollView, Pressable } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Pressable,
+  TextInput,
+} from "react-native";
+import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import UserChat from "../../../components/UserChat";
 import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+const IP_ADDRESS = "http://192.168.1.11:3000";
+import { Ionicons } from "@expo/vector-icons";
 import { WHITELIST_DOMAINS } from "../../../utils/constant";
+import { AntDesign } from "@expo/vector-icons";
 
 const ChatsScreen = () => {
   const [acceptedFriends, setAcceptedFriends] = useState([]);
   const [userId, setUserId] = useState("");
-  // get userId và setUserId by AsyncStorage
+  const navigation = useNavigation();
+
+  // fetch userid and set userid
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -45,9 +57,45 @@ const ChatsScreen = () => {
       console.log("error showing the accepted friends", error);
     }
   };
-  console.log("friends", acceptedFriends);
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: "",
+      headerLeft: () => (
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+          <Ionicons
+            onPress={() => navigation.goBack()}
+            name="arrow-back"
+            size={24}
+            color="black"
+          />
+        </View>
+      ),
+    });
+  }, [navigation]);
+  // console.log("friends", acceptedFriends);
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
+      <Pressable
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          marginHorizontal: 7,
+          marginVertical: 14,
+          gap: 10,
+          backgroundColor: "white",
+          borderRadius: 16,
+          height: 40,
+          flex: 1,
+        }}
+      >
+        <AntDesign
+          style={{ marginLeft: 10 }}
+          name="search1"
+          size={20}
+          color="black"
+        />
+        <TextInput placeholder="Search" />
+      </Pressable>
       <Pressable>
         {acceptedFriends.map((item, index) => (
           <UserChat key={index} item={item} />

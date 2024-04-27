@@ -31,7 +31,6 @@ import { WHITELIST_DOMAINS } from "../../../utils/constant";
 import * as ImagePicker from "expo-image-picker";
 
 const ChatMessage = () => {
-  const IP_ADDRESS = "http://192.168.1.11:3000";
   const [showEmojiSelector, setShowEmojiSelector] = useState(false);
   const [showInputText, setShowInputText] = useState(false);
   const [selectedMessages, setSelectedMessages] = useState([]);
