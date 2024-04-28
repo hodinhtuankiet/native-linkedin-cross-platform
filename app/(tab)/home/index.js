@@ -6,6 +6,8 @@ import {
   Pressable,
   Image,
   TextInput,
+  TouchableOpacity,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -18,13 +20,19 @@ import moment from "moment";
 import { useRouter } from "expo-router";
 import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
-import chat from "../../../components/chat";
 import { WHITELIST_DOMAINS } from "../../../utils/constant";
-
+import { MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
+import EmojiSelector from "react-native-emoji-selector";
 const index = () => {
   const [userId, setUserId] = useState("");
   const [user, setUser] = useState();
   const [posts, setPosts] = useState([]);
+
+  const [showEmojiSelector, setShowEmojiSelector] = useState(false);
+  const [showComments, setShowComments] = useState(false);
+  const [selectedPostId, setSelectedPostId] = useState(null);
+  const [selectedLikePostId, setSelectedLikePostId] = useState(null);
   //AsyncStorage fetch userid and set userid
   useEffect(() => {
     const fetchUser = async () => {
@@ -41,6 +49,7 @@ const index = () => {
       fetchUserProfile();
     }
   }, [userId]);
+
   const fetchUserProfile = async () => {
     try {
       const response = await axios.get(
@@ -70,10 +79,33 @@ const index = () => {
   const toggleShowFullText = () => {
     setShowfullText(!showfullText);
   };
+
+  const handleRemovePress = () => {
+    Alert.alert(
+      "Delete Post",
+      "Do you wanna delete this Artical ?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: () => {
+            // Xử lí xóa ở đây
+            // Ví dụ: gọi một hàm xóa hoặc dispatch một action để xóa dữ liệu
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   const [isLiked, setIsLiked] = useState(false);
   // handle like/unlike post
   // get userId liked & postId
   const handleLikePost = async (postId) => {
+    setSelectedLikePostId(postId);
     try {
       const response = await axios.post(
         `${WHITELIST_DOMAINS}/like/${postId}/${userId}`
@@ -85,6 +117,28 @@ const index = () => {
     } catch (error) {
       console.log("Error liking/unliking the post", error);
     }
+  };
+
+  const handleToggleComments = (postId) => {
+    setShowComments(!showComments);
+    setSelectedPostId(postId);
+  };
+
+  const handleCommentPost = async (postId) => {
+    try {
+      // const response = await axios.post(
+      //   `${WHITELIST_DOMAINS}/like/${postId}/${userId}`
+      // );
+      if (response.status === 200) {
+        const updatedPost = response.data.post;
+        setIsLiked(updatedPost.likes.some((like) => like.user === userId));
+      }
+    } catch (error) {
+      console.log("Error liking/unliking the post", error);
+    }
+  };
+  const handleEmojiPress = () => {
+    setShowEmojiSelector(!showEmojiSelector);
   };
   const router = useRouter();
   return (
@@ -178,7 +232,9 @@ const index = () => {
               >
                 <Entypo name="dots-three-vertical" size={20} color="black" />
 
-                <Feather name="x" size={20} color="black" />
+                <TouchableOpacity onPress={handleRemovePress}>
+                  <FontAwesome name="remove" size={24} color="black" />
+                </TouchableOpacity>
               </View>
             </View>
             {/* Description Artical and see more  */}
@@ -204,17 +260,34 @@ const index = () => {
             />
             {/* Length Like  */}
             {item?.likes?.length > 0 && (
-              <View
-                style={{
-                  padding: 10,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  gap: 6,
-                }}
-              >
-                <SimpleLineIcons name="like" size={16} color="#0072b1" />
-                <Text style={{ color: "gray" }}>{item?.likes?.length}</Text>
-              </View>
+              <>
+                <View style={{ flexDirection: "row" }}>
+                  <View
+                    style={{
+                      padding: 10,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 6,
+                    }}
+                  >
+                    <SimpleLineIcons name="like" size={16} color="#0072b1" />
+                    <Text style={{ color: "gray" }}>{item?.likes?.length}</Text>
+                  </View>
+                  <View
+                    style={{
+                      padding: 10,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 6,
+                    }}
+                  >
+                    <FontAwesome5 name="comment" size={24} color="gray" />
+                    <Text style={{ color: "gray" }}>
+                      {item?.comments?.length}
+                    </Text>
+                  </View>
+                </View>
+              </>
             )}
 
             <View
@@ -238,13 +311,20 @@ const index = () => {
                   style={{ textAlign: "center" }}
                   name="like2"
                   size={24}
-                  color={isLiked ? "#0072b1" : "gray"}
+                  color={
+                    isLiked && selectedLikePostId === item?._id
+                      ? "#0072b1"
+                      : "gray"
+                  }
                 />
                 <Text
                   style={{
                     textAlign: "center",
                     fontSize: 12,
-                    color: isLiked ? "#0072b1" : "gray",
+                    color:
+                      isLiked && selectedLikePostId === item?._id
+                        ? "#0072b1"
+                        : "gray",
                     marginTop: 2,
                   }}
                 >
@@ -252,11 +332,15 @@ const index = () => {
                 </Text>
               </Pressable>
               {/* Handle Comment  */}
-              <Pressable>
+              <Pressable onPress={() => handleToggleComments(item._id)}>
                 <FontAwesome
                   name="comment-o"
                   size={20}
-                  color="gray"
+                  color={
+                    showComments && selectedPostId === item?._id
+                      ? "#0072b1"
+                      : "gray"
+                  }
                   style={{ textAlign: "center" }}
                 />
                 <Text
@@ -264,7 +348,10 @@ const index = () => {
                     textAlign: "center",
                     marginTop: 2,
                     fontSize: 12,
-                    color: "gray",
+                    color:
+                      showComments && selectedPostId === item?._id
+                        ? "#0072b1"
+                        : "gray",
                   }}
                 >
                   Comment
@@ -297,6 +384,62 @@ const index = () => {
                 </Text>
               </Pressable>
             </View>
+            {selectedPostId === item._id && showComments && (
+              <View
+                style={{
+                  padding: 10,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 4,
+                }}
+              >
+                <Pressable>
+                  <Feather name="camera" size={24} color="black" />
+                </Pressable>
+                {/* TextInput  */}
+                <Pressable
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginHorizontal: 7,
+                    gap: 10,
+                    backgroundColor: "white",
+                    borderRadius: 23,
+                    height: 40,
+                    width: 20,
+                    flex: 1,
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <TextInput
+                    placeholder={
+                      user?.name ? `Comment as ${user.name}` : "Comment as"
+                    }
+                    style={{ marginLeft: 9 }}
+                  />
+
+                  <MaterialIcons
+                    onPress={handleEmojiPress}
+                    style={{ marginRight: 10 }}
+                    name="insert-emoticon"
+                    size={24}
+                    color="black"
+                  />
+                  {showEmojiSelector && (
+                    <EmojiSelector
+                      onEmojiSelected={(emoji) => {
+                        setMessage((prevMessage) => prevMessage + emoji);
+                      }}
+                      style={{ height: 250 }}
+                    />
+                  )}
+                </Pressable>
+                {/* Navigation to chat  */}
+                <Pressable onPress={() => router.push("/home/chat")}>
+                  <Ionicons name="send" size={24} color="blue" />
+                </Pressable>
+              </View>
+            )}
           </View>
         ))}
       </View>

@@ -7,6 +7,8 @@ import {
   TextInput,
   Pressable,
   Image,
+  TouchableOpacity,
+  Alert,
 } from "react-native";
 import React, {
   useState,
@@ -81,9 +83,27 @@ const ChatMessage = () => {
   const handleEmojiPress = () => {
     setShowEmojiSelector(!showEmojiSelector);
   };
-  handleTextInputPress;
   const handleTextInputPress = () => {
     setShowInputText(!showInputText);
+  };
+  const handleRemovePress = () => {
+    Alert.alert(
+      "Delete Message",
+      "Do you wanna delete this Message ?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: () => {
+            deleteMessageApi(selectedMessages);
+          },
+        },
+      ],
+      { cancelable: false }
+    );
   };
   // fetch all message between 2 users
   const fetchMessages = async () => {
@@ -227,7 +247,8 @@ const ChatMessage = () => {
             <Ionicons name="arrow-undo-outline" size={24} color="black" />
             <FontAwesome name="star" size={24} color="black" />
             <MaterialIcons
-              onPress={() => deleteMessageApi(selectedMessages)}
+              // onPress={() => deleteMessageApi(selectedMessages)}
+              onPress={handleRemovePress}
               name="delete"
               size={24}
               color="black"

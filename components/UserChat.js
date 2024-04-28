@@ -59,17 +59,18 @@ const UserChat = ({ item }) => {
 
   useEffect(() => {
     fetchMessages();
-  }, []);
+  }, [userId]);
 
-  console.log(messages);
+  console.log("message chat: ", messages);
 
   const getLastMessage = () => {
+    // get messageType is Text
     const userMessages = messages.filter(
       (message) => message.messageType === "text"
     );
 
     const n = userMessages.length;
-
+    // return messages cuối cùng
     return userMessages[n - 1];
   };
 
@@ -114,19 +115,18 @@ const UserChat = ({ item }) => {
 
         <View style={{ flex: 1 }}>
           <Text style={{ fontSize: 15, fontWeight: "500" }}>{item?.name}</Text>
-          {/* {lastMessage && (
+          {lastMessage && (
             <Text style={{ marginTop: 3, color: "gray", fontWeight: "500" }}>
               {lastMessage?.message}
             </Text>
-          )} */}
-          <Text>Last message come here </Text>
+          )}
         </View>
 
-        {/* <View>
+        <View>
           <Text style={{ fontSize: 11, fontWeight: "400", color: "#585858" }}>
             {lastMessage && formatTime(lastMessage?.timeStamp)}
           </Text>
-        </View> */}
+        </View>
       </Pressable>
     </View>
   );

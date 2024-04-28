@@ -24,6 +24,7 @@ const index = () => {
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
   const [userId, setUserId] = useState("");
+  const [user, setUser] = useState();
   const router = useRouter();
   useEffect(() => {
     const fetchUser = async () => {
@@ -35,6 +36,22 @@ const index = () => {
 
     fetchUser();
   }, []);
+  const fetchUserProfile = async () => {
+    try {
+      const response = await axios.get(
+        `${WHITELIST_DOMAINS}/profile/${userId}`
+      );
+      const userData = response.data.user;
+      setUser(userData);
+    } catch (error) {
+      console.log("error fetching user profile", error);
+    }
+  };
+  useEffect(() => {
+    if (userId) {
+      fetchUserProfile();
+    }
+  }, [userId]);
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -124,11 +141,9 @@ const index = () => {
           <View style={{ flexDirection: "row", alignItems: "center", gap: 7 }}>
             <Image
               style={{ width: 40, height: 40, borderRadius: 20 }}
-              source={{
-                uri: "https://drive.google.com/uc?export=download&id=12cs5IdWLHuiWxBTghf8uorJ8cmYD2YBw",
-              }}
+              source={{ uri: user?.profileImage }}
             />
-            <Text style={{ fontWeight: "500" }}>Dinh Tuan Kiet</Text>
+            <Text style={{ fontWeight: "500" }}>{user?.name}</Text>
           </View>
         </View>
 
