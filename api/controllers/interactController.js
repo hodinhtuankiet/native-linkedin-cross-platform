@@ -48,7 +48,22 @@ const updateDescription = async (req, res, next) => {
   }
 };
 
+const deletePost = async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+    const { userDescription } = req.body;
+
+    await User.findByIdAndUpdate(userId, { userDescription });
+
+    res.status(200).json({ message: "User profile updated successfully" });
+  } catch (error) {
+    console.log("Error updating user Profile", error);
+    res.status(500).json({ message: "Error updating user profile" });
+  }
+};
+
 export const interactController = {
   likePost,
   updateDescription,
+  deletePost,
 };
