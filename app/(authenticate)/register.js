@@ -62,9 +62,7 @@ const register = () => {
       <View>
         <Image
           style={{ width: 150, height: 100, resizeMode: "contain" }}
-          source={{
-            uri: "https://www.freepnglogos.com/uploads/linkedin-logo-transparent-png-25.png",
-          }}
+          source={require("../../assets/buns.png")}
         />
       </View>
 
@@ -109,7 +107,7 @@ const register = () => {
                 width: 300,
                 fontSize: name ? 18 : 18,
               }}
-              placeholder="enter your name"
+              placeholder="Enter your name"
             />
           </View>
 
@@ -139,7 +137,7 @@ const register = () => {
                 width: 300,
                 fontSize: email ? 18 : 18,
               }}
-              placeholder="enter your Email"
+              placeholder="Enter your Email"
             />
           </View>
 
@@ -170,7 +168,7 @@ const register = () => {
                 width: 300,
                 fontSize: password ? 18 : 18,
               }}
-              placeholder="enter your Password"
+              placeholder="Enter your Password"
             />
           </View>
 
@@ -200,7 +198,7 @@ const register = () => {
                 width: 300,
                 fontSize: image ? 18 : 18,
               }}
-              placeholder="enter your image url"
+              placeholder="Enter your image url"
             />
           </View>
           <View
@@ -224,7 +222,7 @@ const register = () => {
             onPress={handleRegister}
             style={{
               width: 200,
-              backgroundColor: "#0072b1",
+              backgroundColor: "#f39c12",
               borderRadius: 6,
               marginLeft: "auto",
               marginRight: "auto",

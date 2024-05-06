@@ -22,6 +22,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
+import { Octicons } from "@expo/vector-icons";
 // import EmojiSelector from "react-native-emoji-selector";
 import EmojiSelector from "react-native-emoji-selector";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -202,7 +203,7 @@ const ChatMessage = () => {
     }
   };
 
-  console.log("message", selectedMessages);
+  // console.log("message", selectedMessages);
   // UI Header Chat And Icon Navigation Back
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -256,8 +257,9 @@ const ChatMessage = () => {
           </View>
         ) : (
           <View style={{ flexDirection: "row", alignItems: "center", gap: 15 }}>
-            <Feather name="phone-call" size={26} color="black" />
+            <Ionicons name="call-outline" size={27} color="black" />
             <Feather name="video" size={26} color="black" />
+            <Entypo name="dots-three-vertical" size={24} color="black" />
           </View>
         ),
     });
@@ -285,7 +287,7 @@ const ChatMessage = () => {
   };
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: "#ffbe76" }}>
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: "#F0F0F0" }}>
       <ScrollView>
         {messages.map((item, index) => {
           if (item?.messageType === "text") {

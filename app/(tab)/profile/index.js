@@ -5,6 +5,7 @@ import {
   Pressable,
   Image,
   Button,
+  ScrollView,
   TextInput,
 } from "react-native";
 import React, { useState, useEffect } from "react";
@@ -82,192 +83,194 @@ const profile = () => {
   };
 
   return (
-    <View>
-      <View
-        style={{
-          padding: 10,
-          flexDirection: "row",
-          alignItems: "center",
-          gap: 4,
-        }}
-      >
-        <Pressable>
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <View>
+        <View
+          style={{
+            padding: 10,
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 4,
+          }}
+        >
+          <Pressable>
+            <Image
+              style={{ width: 30, height: 30, borderRadius: 15 }}
+              source={{ uri: user?.profileImage }}
+            />
+          </Pressable>
+
+          <Pressable
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginHorizontal: 7,
+              gap: 10,
+              backgroundColor: "white",
+              borderRadius: 3,
+              height: 30,
+              flex: 1,
+            }}
+          >
+            <AntDesign
+              style={{ marginLeft: 10 }}
+              name="search1"
+              size={20}
+              color="black"
+            />
+            <TextInput placeholder="Search" />
+          </Pressable>
+          <Pressable onPress={() => router.push("/home/chat")}>
+            <Ionicons name="chatbox-ellipses-outline" size={24} color="black" />
+          </Pressable>
+        </View>
+
+        <Image
+          style={{ width: "100%", height: 130 }}
+          source={{
+            uri: "https://media.istockphoto.com/id/937025430/photo/abstract-defocused-blue-soft-background.jpg?b=1&s=612x612&w=0&k=20&c=FwJnRNxkX_lZKImOoJbo5VsgZPCMNiODdsRsggJqejA=",
+          }}
+        />
+
+        <View style={{ position: "absolute", top: 130, left: 10 }}>
           <Image
-            style={{ width: 30, height: 30, borderRadius: 15 }}
+            style={{ width: 120, height: 120, borderRadius: 60 }}
             source={{ uri: user?.profileImage }}
           />
-        </Pressable>
+        </View>
 
-        <Pressable
+        <View style={{ marginTop: 80, marginHorizontal: 10 }}>
+          <Text style={{ fontSize: 17, fontWeight: "bold" }}>{user?.name}</Text>
+          <Pressable onPress={() => setIsEditing(!isEditing)}>
+            <Text>{user?.userDescription ? "Edit" : "Add Bio"}</Text>
+          </Pressable>
+
+          <View>
+            {isEditing ? (
+              <>
+                <TextInput
+                  placeholder="enter your description"
+                  value={userDescription}
+                  onChangeText={(text) => setUserDescription(text)}
+                />
+
+                <Button onPress={handleSaveDescription} title="Save" />
+              </>
+            ) : (
+              <Text>{user?.userDescription}</Text>
+            )}
+          </View>
+
+          <Text style={{ marginTop: 12, fontWeight: "500", fontSize: 15 }}>
+            Youtube • Linkedin Member
+          </Text>
+          <Text style={{ fontSize: 15, color: "gray" }}>
+            Bengaluru, Karnataka, India
+          </Text>
+        </View>
+
+        <View
           style={{
             flexDirection: "row",
             alignItems: "center",
-            marginHorizontal: 7,
             gap: 10,
-            backgroundColor: "white",
-            borderRadius: 3,
-            height: 30,
-            flex: 1,
+            marginTop: 12,
+            marginHorizontal: 10,
           }}
         >
-          <AntDesign
-            style={{ marginLeft: 10 }}
-            name="search1"
-            size={20}
-            color="black"
-          />
-          <TextInput placeholder="Search" />
-        </Pressable>
-        <Pressable onPress={() => router.push("/home/chat")}>
-          <Ionicons name="chatbox-ellipses-outline" size={24} color="black" />
-        </Pressable>
-      </View>
-
-      <Image
-        style={{ width: "100%", height: 130 }}
-        source={{
-          uri: "https://media.istockphoto.com/id/937025430/photo/abstract-defocused-blue-soft-background.jpg?b=1&s=612x612&w=0&k=20&c=FwJnRNxkX_lZKImOoJbo5VsgZPCMNiODdsRsggJqejA=",
-        }}
-      />
-
-      <View style={{ position: "absolute", top: 130, left: 10 }}>
-        <Image
-          style={{ width: 120, height: 120, borderRadius: 60 }}
-          source={{ uri: user?.profileImage }}
-        />
-      </View>
-
-      <View style={{ marginTop: 80, marginHorizontal: 10 }}>
-        <Text style={{ fontSize: 17, fontWeight: "bold" }}>{user?.name}</Text>
-        <Pressable onPress={() => setIsEditing(!isEditing)}>
-          <Text>{user?.userDescription ? "Edit" : "Add Bio"}</Text>
-        </Pressable>
-
-        <View>
-          {isEditing ? (
-            <>
-              <TextInput
-                placeholder="enter your description"
-                value={userDescription}
-                onChangeText={(text) => setUserDescription(text)}
-              />
-
-              <Button onPress={handleSaveDescription} title="Save" />
-            </>
-          ) : (
-            <Text>{user?.userDescription}</Text>
-          )}
+          <Pressable
+            style={{
+              backgroundColor: "#0072b1",
+              paddingVertical: 4,
+              paddingHorizontal: 10,
+              borderRadius: 25,
+            }}
+          >
+            <Text style={{ color: "white", textAlign: "center" }}>Open to</Text>
+          </Pressable>
+          <Pressable
+            style={{
+              backgroundColor: "#0072b1",
+              paddingVertical: 4,
+              paddingHorizontal: 10,
+              borderRadius: 25,
+            }}
+          >
+            <Text style={{ color: "white", textAlign: "center" }}>
+              Add Section
+            </Text>
+          </Pressable>
         </View>
 
-        <Text style={{ marginTop: 12, fontWeight: "500", fontSize: 15 }}>
-          Youtube • Linkedin Member
-        </Text>
-        <Text style={{ fontSize: 15, color: "gray" }}>
-          Bengaluru, Karnataka, India
-        </Text>
-      </View>
-
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          gap: 10,
-          marginTop: 12,
-          marginHorizontal: 10,
-        }}
-      >
-        <Pressable
-          style={{
-            backgroundColor: "#0072b1",
-            paddingVertical: 4,
-            paddingHorizontal: 10,
-            borderRadius: 25,
-          }}
-        >
-          <Text style={{ color: "white", textAlign: "center" }}>Open to</Text>
-        </Pressable>
-        <Pressable
-          style={{
-            backgroundColor: "#0072b1",
-            paddingVertical: 4,
-            paddingHorizontal: 10,
-            borderRadius: 25,
-          }}
-        >
-          <Text style={{ color: "white", textAlign: "center" }}>
-            Add Section
+        <View style={{ marginHorizontal: 10, marginTop: 10 }}>
+          <Text style={{ fontSize: 17, fontWeight: "bold" }}>Analytics</Text>
+          <Text style={{ fontSize: 15, color: "gray", marginTop: 2 }}>
+            Private to you
           </Text>
+
+          <View style={{ flexDirection: "row", gap: 7, marginTop: 10 }}>
+            <Ionicons name="people" size={28} color="black" />
+            <View style={{ marginLeft: 7 }}>
+              <Text style={{ fontSize: 15, fontWeight: "600" }}>
+                350 profile views
+              </Text>
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "500",
+                  color: "gray",
+                  marginTop: 1,
+                }}
+              >
+                Discover who's viewed your profile
+              </Text>
+            </View>
+          </View>
+
+          <View style={{ flexDirection: "row", gap: 7, marginTop: 10 }}>
+            <Entypo name="bar-graph" size={24} color="black" />
+            <View style={{ marginLeft: 7 }}>
+              <Text style={{ fontSize: 15, fontWeight: "600" }}>
+                1242 post Impressions
+              </Text>
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "500",
+                  color: "gray",
+                  marginTop: 1,
+                }}
+              >
+                Checkout who's engaing with your posts
+              </Text>
+            </View>
+          </View>
+
+          <View style={{ flexDirection: "row", gap: 7, marginTop: 10 }}>
+            <Feather name="search" size={24} color="black" />
+            <View style={{ marginLeft: 7 }}>
+              <Text style={{ fontSize: 15, fontWeight: "600" }}>
+                45 post appearenced
+              </Text>
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "500",
+                  color: "gray",
+                  marginTop: 1,
+                }}
+              >
+                see how often you appear in search results
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        <Pressable onPress={logout}>
+          <Text>Logout</Text>
         </Pressable>
       </View>
-
-      <View style={{ marginHorizontal: 10, marginTop: 10 }}>
-        <Text style={{ fontSize: 17, fontWeight: "bold" }}>Analytics</Text>
-        <Text style={{ fontSize: 15, color: "gray", marginTop: 2 }}>
-          Private to you
-        </Text>
-
-        <View style={{ flexDirection: "row", gap: 7, marginTop: 10 }}>
-          <Ionicons name="people" size={28} color="black" />
-          <View style={{ marginLeft: 7 }}>
-            <Text style={{ fontSize: 15, fontWeight: "600" }}>
-              350 profile views
-            </Text>
-            <Text
-              style={{
-                fontSize: 15,
-                fontWeight: "500",
-                color: "gray",
-                marginTop: 1,
-              }}
-            >
-              Discover who's viewed your profile
-            </Text>
-          </View>
-        </View>
-
-        <View style={{ flexDirection: "row", gap: 7, marginTop: 10 }}>
-          <Entypo name="bar-graph" size={24} color="black" />
-          <View style={{ marginLeft: 7 }}>
-            <Text style={{ fontSize: 15, fontWeight: "600" }}>
-              1242 post Impressions
-            </Text>
-            <Text
-              style={{
-                fontSize: 15,
-                fontWeight: "500",
-                color: "gray",
-                marginTop: 1,
-              }}
-            >
-              Checkout who's engaing with your posts
-            </Text>
-          </View>
-        </View>
-
-        <View style={{ flexDirection: "row", gap: 7, marginTop: 10 }}>
-          <Feather name="search" size={24} color="black" />
-          <View style={{ marginLeft: 7 }}>
-            <Text style={{ fontSize: 15, fontWeight: "600" }}>
-              45 post appearenced
-            </Text>
-            <Text
-              style={{
-                fontSize: 15,
-                fontWeight: "500",
-                color: "gray",
-                marginTop: 1,
-              }}
-            >
-              see how often you appear in search results
-            </Text>
-          </View>
-        </View>
-      </View>
-
-      <Pressable onPress={logout}>
-        <Text>Logout</Text>
-      </Pressable>
-    </View>
+    </ScrollView>
   );
 };
 

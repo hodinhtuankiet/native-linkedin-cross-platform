@@ -22,7 +22,7 @@ firebase.js
 npm-debug.*
 yarn-debug.*
 yarn-error.*
-
+utils/constant.js
 # macOS
 .DS_Store
 *.pem

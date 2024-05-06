@@ -109,7 +109,7 @@ const login = () => {
                 width: 300,
                 fontSize: email ? 18 : 18,
               }}
-              placeholder="enter your Email"
+              placeholder="Enter your Email"
             />
           </View>
 
@@ -141,7 +141,7 @@ const login = () => {
                   width: 300,
                   fontSize: password ? 18 : 18,
                 }}
-                placeholder="enter your Password"
+                placeholder="Enter your Password"
               />
             </View>
           </View>

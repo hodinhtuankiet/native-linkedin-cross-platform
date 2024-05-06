@@ -5,6 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import Home from "./home/index";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 const getTabBarVisibility = (route) => {
   const routeName = getFocusedRouteNameFromRoute(route);
   // console.log(routeName);
@@ -60,22 +61,6 @@ export default function Layout() {
         })}
       />
       <Tabs.Screen
-        name="profile/index"
-        options={({ route }) => ({
-          tabBarStyle: { display: getTabBarVisibility(route), height: 66 }, // Adjust the height as per your requirement
-          tabBarShowLabel: false,
-          tabBarStyle: { display: "none" },
-          tabBarLabelStyle: { color: "#0984e3" },
-          headerShown: false,
-          tabBarIcon: ({ focused }) =>
-            focused ? (
-              <AntDesign name="user" size={26} color="black" />
-            ) : (
-              <AntDesign name="user" size={26} color="black" />
-            ),
-        })}
-      />
-      <Tabs.Screen
         name="chat"
         options={({ route }) => ({
           tabBarStyle: { display: getTabBarVisibility(route), height: 66 }, // Adjust the height as per your requirement
@@ -85,9 +70,25 @@ export default function Layout() {
           headerShown: false,
           tabBarIcon: ({ focused }) =>
             focused ? (
-              <Feather name="message-square" size={26} color="black" />
+              <Ionicons name="chatbox" size={26} color="black" />
             ) : (
-              <Feather name="message-square" size={26} color="black" />
+              <Ionicons name="chatbox-outline" size={26} color="black" />
+            ),
+        })}
+      />
+      <Tabs.Screen
+        name="profile/index"
+        options={({ route }) => ({
+          tabBarStyle: { display: getTabBarVisibility(route), height: 66 }, // Adjust the height as per your requirement
+          tabBarShowLabel: false,
+          // tabBarStyle: { display: "none" },
+          tabBarLabelStyle: { color: "#0984e3" },
+          headerShown: false,
+          tabBarIcon: ({ focused }) =>
+            focused ? (
+              <FontAwesome name="user" size={26} color="black" />
+            ) : (
+              <AntDesign name="user" size={26} color="black" />
             ),
         })}
       />
