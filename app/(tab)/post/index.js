@@ -18,7 +18,6 @@ import axios from "axios";
 import { useRouter } from "expo-router";
 import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
-// const IP_ADDRESS = "http://192.168.1.11:3000";
 import { WHITELIST_DOMAINS } from "../../../utils/constant";
 const index = () => {
   const [description, setDescription] = useState("");

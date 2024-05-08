@@ -29,6 +29,8 @@ const index = () => {
   const [user, setUser] = useState();
   const [posts, setPosts] = useState([]);
 
+  const [showMenu, setShowMenu] = useState(false);
+
   const [showEmojiSelector, setShowEmojiSelector] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState(null);
@@ -62,17 +64,18 @@ const index = () => {
     }
   };
   // fetch all post of user
+  const fetchAllPosts = async () => {
+    try {
+      const response = await axios.get(`${WHITELIST_DOMAINS}/all`);
+      setPosts(response.data.posts);
+    } catch (error) {
+      console.log("error fetching posts", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchAllPosts = async () => {
-      try {
-        const response = await axios.get(`${WHITELIST_DOMAINS}/all`);
-        setPosts(response.data.posts);
-      } catch (error) {
-        console.log("error fetching posts", error);
-      }
-    };
     fetchAllPosts();
-  });
+  }, [posts]);
 
   const MAX_LINES = 2;
   const [showfullText, setShowfullText] = useState(false);
@@ -80,7 +83,7 @@ const index = () => {
     setShowfullText(!showfullText);
   };
 
-  const handleRemovePress = () => {
+  const handleRemovePress = (idPost) => {
     Alert.alert(
       "Delete Post",
       "Do you wanna delete this Artical ?",
@@ -92,15 +95,25 @@ const index = () => {
         {
           text: "OK",
           onPress: () => {
-            // Xử lí xóa ở đây
-            // Ví dụ: gọi một hàm xóa hoặc dispatch một action để xóa dữ liệu
+            handleDeletePost(idPost);
           },
         },
       ],
       { cancelable: false }
     );
   };
-
+  const handleDeletePost = async (idPost) => {
+    try {
+      const response = await axios.delete(
+        `${WHITELIST_DOMAINS}/deletePost/${idPost}`
+      );
+      if (response.status === 200) {
+        fetchAllPosts();
+      }
+    } catch (error) {
+      console.log("Error deleting the post", error);
+    }
+  };
   const [isLiked, setIsLiked] = useState(false);
   // handle like/unlike post
   // get userId liked & postId
@@ -139,6 +152,19 @@ const index = () => {
   };
   const handleEmojiPress = () => {
     setShowEmojiSelector(!showEmojiSelector);
+  };
+  const toggleMenu = () => {
+    setShowMenu(!showMenu);
+  };
+
+  const handleEdit = () => {
+    // Xử lý sự kiện khi người dùng chọn "Edit"
+    console.log("Edit clicked");
+  };
+
+  const handleDelete = () => {
+    // Xử lý sự kiện khi người dùng chọn "Delete"
+    console.log("Delete clicked");
   };
   const router = useRouter();
   return (
@@ -230,9 +256,23 @@ const index = () => {
               <View
                 style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
               >
-                <Entypo name="dots-three-vertical" size={20} color="black" />
+                <TouchableOpacity onPress={toggleMenu}>
+                  <Entypo name="dots-three-vertical" size={20} color="black" />
+                </TouchableOpacity>
+                {showMenu && (
+                  <View style={style.menu}>
+                    <TouchableOpacity onPress={handleEdit}>
+                      <Text style={style.menuItem}>
+                        Update Description Post
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={handleDelete}>
+                      <Text style={style.menuItem}>Report</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
 
-                <TouchableOpacity onPress={handleRemovePress}>
+                <TouchableOpacity onPress={() => handleRemovePress(item._id)}>
                   <FontAwesome name="remove" size={24} color="black" />
                 </TouchableOpacity>
               </View>
@@ -387,57 +427,135 @@ const index = () => {
             {selectedPostId === item._id && showComments && (
               <View
                 style={{
-                  padding: 10,
-                  flexDirection: "row",
+                  // padding: 10,
+                  flexDirection: "column",
                   alignItems: "center",
                   gap: 4,
                 }}
               >
-                <Pressable>
-                  <Feather name="camera" size={24} color="black" />
-                </Pressable>
-                {/* TextInput  */}
-                <Pressable
+                {/* View Comment User  */}
+                <View
+                  style={{
+                    flexDirection: "row",
+                    // gap: 10,
+                    justifyContent: "flex-start",
+                    alignItems: "flex-start",
+                  }}
+                >
+                  <Image
+                    style={{
+                      width: 45,
+                      height: 45,
+                      borderRadius: 30,
+                      marginRight: 5,
+                      paddingRight: 10,
+                    }}
+                    source={{ uri: item?.user?.profileImage }}
+                  />
+                  <View style={{ flexDirection: "column", gap: 2 }}>
+                    <Text style={{ fontSize: 15, fontWeight: "600" }}>
+                      {item?.user?.name}
+                    </Text>
+                    <Text
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                      style={{
+                        width: 280,
+                        color: "gray",
+                        backgroundColor: "#f5f6fa",
+                        fontSize: 15,
+                        fontWeight: "400",
+                        // padding: 15,
+                        borderRadius: 20,
+                      }}
+                    >
+                      My yext text
+                    </Text>
+                    {/* <Text style={{ color: "gray" }}>
+                    {moment(item.createdAt).format("MMMM Do YYYY")}
+                  </Text> */}
+                    <View
+                      style={{ flexDirection: "row", marginTop: 5, gap: 2 }}
+                    >
+                      <Text
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                        style={{
+                          color: "blue",
+                          fontSize: 13,
+                          fontWeight: "400",
+                        }}
+                      >
+                        Like
+                      </Text>
+                      <Text
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                        style={{
+                          color: "blue",
+                          fontSize: 13,
+                          fontWeight: "400",
+                          marginLeft: 10,
+                        }}
+                      >
+                        Reply
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+                <View
                   style={{
                     flexDirection: "row",
                     alignItems: "center",
-                    marginHorizontal: 7,
                     gap: 10,
-                    backgroundColor: "white",
-                    borderRadius: 23,
-                    height: 40,
-                    width: 20,
-                    flex: 1,
-                    justifyContent: "space-between",
                   }}
                 >
-                  <TextInput
-                    placeholder={
-                      user?.name ? `Comment as ${user.name}` : "Comment as"
-                    }
-                    style={{ marginLeft: 9 }}
-                  />
-
-                  <MaterialIcons
-                    onPress={handleEmojiPress}
-                    style={{ marginRight: 10 }}
-                    name="insert-emoticon"
-                    size={24}
-                    color="black"
-                  />
-                  {showEmojiSelector && (
-                    <EmojiSelector
-                      onEmojiSelected={(emoji) => {
-                        setMessage((prevMessage) => prevMessage + emoji);
-                      }}
-                      style={{ height: 250 }}
+                  <Pressable>
+                    <Feather name="camera" size={24} color="black" />
+                  </Pressable>
+                  {/* TextInput */}
+                  <Pressable
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      marginHorizontal: 7,
+                      gap: 10,
+                      backgroundColor: "white",
+                      borderRadius: 23,
+                      height: 40,
+                      width: 20,
+                      flex: 1,
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <TextInput
+                      placeholder={
+                        user?.name ? `Comment as ${user.name}` : "Comment as"
+                      }
+                      style={{ marginLeft: 9 }}
                     />
-                  )}
-                </Pressable>
-                {/* Navigation to chat  */}
-                <Pressable onPress={() => router.push("/home/chat")}>
-                  <Ionicons name="send" size={24} color="blue" />
-                </Pressable>
+
+                    <MaterialIcons
+                      onPress={handleEmojiPress}
+                      style={{ marginRight: 10 }}
+                      name="insert-emoticon"
+                      size={24}
+                      color="black"
+                    />
+                    {showEmojiSelector && (
+                      <EmojiSelector
+                        onEmojiSelected={(emoji) => {
+                          setMessage((prevMessage) => prevMessage + emoji);
+                        }}
+                        style={{ height: 250 }}
+                      />
+                    )}
+                  </Pressable>
+                  {/* Navigation to chat */}
+                  <Pressable onPress={() => router.push("/home/chat")}>
+                    <Ionicons name="send" size={24} color="blue" />
+                  </Pressable>
+                </View>
               </View>
             )}
           </View>
@@ -450,3 +568,24 @@ const index = () => {
 export default index;
 
 const styles = StyleSheet.create({});
+const style = StyleSheet.create({
+  dropdownIcon: {
+    marginRight: 35,
+  },
+  menu: {
+    position: "absolute",
+    top: 30,
+    right: 45,
+    backgroundColor: "#fff",
+    borderRadius: 5,
+    padding: 10,
+    zIndex: 99,
+    elevation: 3,
+    // maxWidth: 150, // Điều chỉnh chiều rộng tối đa của dropdown menu
+  },
+  menuItem: {
+    padding: 10,
+    zIndex: 999,
+    fontSize: 16,
+  },
+});

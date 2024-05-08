@@ -2,9 +2,7 @@ import { Tabs } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import Home from "./home/index";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
-import { Feather } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 const getTabBarVisibility = (route) => {
   const routeName = getFocusedRouteNameFromRoute(route);
