@@ -35,29 +35,26 @@ const likePost = async (req, res, next) => {
 
 // show all posts
 const updateDescription = async (req, res, next) => {
-  try {
-    const userId = req.params.userId;
-    const { userDescription } = req.body;
-
-    await User.findByIdAndUpdate(userId, { userDescription });
-
-    res.status(200).json({ message: "User profile updated successfully" });
-  } catch (error) {
-    console.log("Error updating user Profile", error);
-    res.status(500).json({ message: "Error updating user profile" });
-  }
+  // try {
+  //   const userId = req.params.userId;
+  //   const { userDescription } = req.body;
+  //   await User.findByIdAndUpdate(userId, { userDescription });
+  //   res.status(200).json({ message: "User profile updated successfully" });
+  // } catch (error) {
+  //   console.log("Error updating user Profile", error);
+  //   res.status(500).json({ message: "Error updating user profile" });
+  // }
 };
 
 const deletePost = async (req, res, next) => {
   try {
-    const userId = req.params.userId;
-    const { userDescription } = req.body;
+    const postId = req.params.postId;
 
-    await User.findByIdAndUpdate(userId, { userDescription });
+    await Post.findByIdAndDelete(postId);
 
-    res.status(200).json({ message: "User profile updated successfully" });
+    res.status(200).json({ message: "Post delete successfully" });
   } catch (error) {
-    console.log("Error updating user Profile", error);
+    console.log("Error delete user Profile", error);
     res.status(500).json({ message: "Error updating user profile" });
   }
 };

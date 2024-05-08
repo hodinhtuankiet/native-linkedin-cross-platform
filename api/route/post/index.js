@@ -4,7 +4,6 @@ import { interactRoute } from "./interactRoute";
 import { handlePostRoute } from "./handlePostRoute";
 const Router = express.Router();
 
-// Register API
 Router.use("/create", postRoute);
 
 Router.use("/all", postRoute);
