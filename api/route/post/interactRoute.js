@@ -3,5 +3,5 @@ import express from "express";
 const Router = express.Router();
 import { interactController } from "../../controllers/interactController";
 Router.route("/:postId/:userId").post(interactController.likePost);
-Router.route("/:userId").put(interactController.updateDescription);
+Router.route("/:postId/:userId").put(interactController.updateDescription);
 export const interactRoute = Router;

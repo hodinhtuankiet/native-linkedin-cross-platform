@@ -35,15 +35,35 @@ const likePost = async (req, res, next) => {
 
 // show all posts
 const updateDescription = async (req, res, next) => {
-  // try {
-  //   const userId = req.params.userId;
-  //   const { userDescription } = req.body;
-  //   await User.findByIdAndUpdate(userId, { userDescription });
-  //   res.status(200).json({ message: "User profile updated successfully" });
-  // } catch (error) {
-  //   console.log("Error updating user Profile", error);
-  //   res.status(500).json({ message: "Error updating user profile" });
-  // }
+  try {
+    const postId = req.params.postId;
+    const userId = req.params.userId;
+    const { description } = req.body;
+
+    // Kiểm tra xem bài viết có thuộc về userId không
+    const post = await Post.findOne({ _id: postId, user: userId });
+
+    if (!post) {
+      // Nếu không tìm thấy bài viết của người dùng, trả về lỗi
+      return res
+        .status(404)
+        .json({ message: "Cannot update post of another user" });
+    }
+
+    // Thực hiện cập nhật mô tả của người dùng và kiểm tra xem cập nhật có thành công hay không
+    const updatedUser = await Post.findByIdAndUpdate(postId, { description });
+
+    if (!updatedUser) {
+      // Nếu không tìm thấy người dùng, trả về lỗi
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Nếu cập nhật thành công, trả về kết quả thành công
+    res.status(200).json({ message: "User profile updated successfully" });
+  } catch (error) {
+    console.log("Error updating user Profile", error);
+    res.status(500).json({ message: "Error updating user profile" });
+  }
 };
 
 const deletePost = async (req, res, next) => {
