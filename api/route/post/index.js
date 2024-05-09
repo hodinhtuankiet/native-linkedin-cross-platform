@@ -8,6 +8,8 @@ Router.use("/create", postRoute);
 
 Router.use("/all", postRoute);
 
+Router.use("/createComment", postRoute);
+
 Router.use("/like", interactRoute);
 
 Router.use("/profile", interactRoute);
