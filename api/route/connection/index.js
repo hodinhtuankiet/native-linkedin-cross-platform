@@ -1,6 +1,6 @@
 import express from "express";
-import { connectionRoute } from "./connection";
-import { connectionRequestRoute } from "./connectionRequest";
+import { connectionRoute } from "./connection.js";
+import { connectionRequestRoute } from "./connectionRequest.js";
 const Router = express.Router();
 
 // Register API

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { env } from "./environment";
+import { env } from "./environment.js";
 mongoose
   .connect(env.MONGODB_URL)
   .then(() => {

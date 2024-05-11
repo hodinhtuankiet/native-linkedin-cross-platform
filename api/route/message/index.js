@@ -1,7 +1,7 @@
 import express from "express";
-import { messageRoute } from "./message";
-import { deleteMessageRoute } from "./deleteMessage";
-import { searchMessageRoute } from "./searchMessageRoute";
+import { messageRoute } from "./message.js";
+import { deleteMessageRoute } from "./deleteMessage.js";
+import { searchMessageRoute } from "./searchMessageRoute.js";
 const Router = express.Router();
 
 Router.use("/messages", messageRoute);

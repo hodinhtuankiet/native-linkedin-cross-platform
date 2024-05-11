@@ -23,6 +23,8 @@ const postSchema = new mongoose.Schema({
         ref: "User",
       },
       text: String,
+      name: String, // Add name field to store user's name
+      profileImage: String,
       createdAt: {
         type: Date,
         default: Date.now,

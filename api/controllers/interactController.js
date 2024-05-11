@@ -69,8 +69,18 @@ const updateDescription = async (req, res, next) => {
 const deletePost = async (req, res, next) => {
   try {
     const postId = req.params.postId;
+    const userId = req.params.userId;
 
-    await Post.findByIdAndDelete(postId);
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+    if (post.user._id.toString() !== userId) {
+      return res
+        .status(403)
+        .json({ error: "You can only delete your own posts" });
+    }
+    await Post.deleteOne({ _id: postId });
 
     res.status(200).json({ message: "Post delete successfully" });
   } catch (error) {

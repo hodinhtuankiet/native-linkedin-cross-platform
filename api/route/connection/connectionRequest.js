@@ -1,7 +1,7 @@
 import express from "express";
 
 const Router = express.Router();
-import { connectionController } from "../../controllers/connectionController";
+import { connectionController } from "../../controllers/connectionController.js";
 
 Router.route("/").post(connectionController.requestConnection);
 Router.route("/:userId").get(connectionController.showAllRequestConnections);

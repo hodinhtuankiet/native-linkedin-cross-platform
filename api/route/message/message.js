@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import { messageController } from "../../controllers/messageController";
+import { messageController } from "../../controllers/messageController.js";
 
 const Router = express.Router();
 const storage = multer.diskStorage({
