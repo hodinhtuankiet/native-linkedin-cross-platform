@@ -4,6 +4,7 @@ import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
+import "react-native-reanimated";
 const getTabBarVisibility = (route) => {
   const routeName = getFocusedRouteNameFromRoute(route);
   // console.log(routeName);

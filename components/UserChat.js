@@ -61,8 +61,6 @@ const UserChat = ({ item }) => {
     fetchMessages();
   }, [userId]);
 
-  console.log("message chat: ", messages);
-
   const getLastMessage = () => {
     // get messageType is Text
     const userMessages = messages.filter(

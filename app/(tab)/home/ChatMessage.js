@@ -5,11 +5,14 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   TextInput,
+  Platform,
   Pressable,
   Image,
+  Keyboard,
   TouchableOpacity,
   Alert,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import React, {
   useState,
   useContext,
@@ -47,6 +50,9 @@ const ChatMessage = () => {
   const navigation = useNavigation();
   // các message của 2 user chat together
   const [messages, setMessages] = useState([]);
+
+  const [textInputHeight, setTextInputHeight] = useState(40);
+
   // get userId & setUserId through AsyncStorage
   useEffect(() => {
     const fetchUser = async () => {
@@ -87,6 +93,23 @@ const ChatMessage = () => {
   const handleTextInputPress = () => {
     setShowInputText(!showInputText);
   };
+  useEffect(() => {
+    // Add event listeners for keyboard show and hide events
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => setTextInputHeight(800)
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => setTextInputHeight(400)
+    );
+
+    // Clean up the listeners on unmount
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
   const handleRemovePress = () => {
     Alert.alert(
       "Delete Message",
@@ -409,20 +432,26 @@ const ChatMessage = () => {
           size={24}
           color="gray"
         />
-        <TextInput
-          onPress={handleTextInputPress}
-          value={message}
-          onChangeText={(text) => setMessage(text)}
-          style={{
-            flex: 1,
-            height: 40,
-            borderWidth: 1,
-            borderColor: "#dddddd",
-            borderRadius: 20,
-            paddingHorizontal: 7,
-          }}
-          placeholder="Type Your message..."
-        />
+        <KeyboardAwareScrollView
+          resetScrollToCoords={{ x: 0, y: 0 }}
+          contentContainerStyle={{ flex: 1 }}
+          scrollEnabled={false}
+        >
+          <TextInput
+            onPress={handleTextInputPress}
+            value={message}
+            onChangeText={(text) => setMessage(text)}
+            style={{
+              flex: 1,
+              height: textInputHeight, // Use the state variable for height
+              borderWidth: 1,
+              borderColor: "#dddddd",
+              borderRadius: 20,
+              paddingHorizontal: 7,
+            }}
+            placeholder="Type Your message..."
+          />
+        </KeyboardAwareScrollView>
         <View
           style={{
             flexDirection: "row",

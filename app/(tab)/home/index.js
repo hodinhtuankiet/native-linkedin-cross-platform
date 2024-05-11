@@ -35,6 +35,9 @@ const index = () => {
   const [showComments, setShowComments] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState(null);
   const [selectedLikePostId, setSelectedLikePostId] = useState(null);
+
+  const [description, setDescription] = useState("");
+
   //AsyncStorage fetch userid and set userid
   useEffect(() => {
     const fetchUser = async () => {
@@ -72,6 +75,14 @@ const index = () => {
       console.log("error fetching posts", error);
     }
   };
+  // const fetchAllComments = async () => {
+  //   try {
+  //     const response = await axios.get(`${WHITELIST_DOMAINS}/all`);
+  //     setPosts(response.data.posts);
+  //   } catch (error) {
+  //     console.log("error fetching posts", error);
+  //   }
+  // };
 
   useEffect(() => {
     fetchAllPosts();
@@ -102,12 +113,20 @@ const index = () => {
       { cancelable: false }
     );
   };
+
   const handleDeletePost = async (idPost) => {
     try {
       const response = await axios.delete(
-        `${WHITELIST_DOMAINS}/deletePost/${idPost}`
+        `${WHITELIST_DOMAINS}/deletePost/${idPost}/${userId}`,
+        {
+          validateStatus: function (status) {
+            return status < 500; // Resolve only if the status code is less than 500
+          },
+        }
       );
-      if (response.status === 200) {
+      if (response.status === 403) {
+        Alert.alert("Error", "You just only delete your post");
+      } else if (response.status === 200) {
         fetchAllPosts();
       }
     } catch (error) {
@@ -131,25 +150,30 @@ const index = () => {
       console.log("Error liking/unliking the post", error);
     }
   };
-
+  const handleCommentPost = async (postId) => {
+    try {
+      const response = await axios.post(
+        `${WHITELIST_DOMAINS}/createComment/${postId}/${userId}`,
+        { description }
+      );
+      if (response.status === 200 || response.status === 201) {
+        setDescription("");
+        fetchAllPosts();
+      } else {
+        console.log("Unexpected status code:", response.status);
+      }
+    } catch (error) {
+      console.log("Error commenting on the post:", error);
+      if (error.response) {
+        console.log("Server response:", error.response.data);
+      }
+    }
+  };
   const handleToggleComments = (postId) => {
     setShowComments(!showComments);
     setSelectedPostId(postId);
   };
 
-  const handleCommentPost = async (postId) => {
-    try {
-      // const response = await axios.post(
-      //   `${WHITELIST_DOMAINS}/like/${postId}/${userId}`
-      // );
-      if (response.status === 200) {
-        const updatedPost = response.data.post;
-        setIsLiked(updatedPost.likes.some((like) => like.user === userId));
-      }
-    } catch (error) {
-      console.log("Error liking/unliking the post", error);
-    }
-  };
   const handleEmojiPress = () => {
     setShowEmojiSelector(!showEmojiSelector);
   };
@@ -167,6 +191,7 @@ const index = () => {
     console.log("Delete clicked");
   };
   const router = useRouter();
+  // console.log(posts);
   return (
     <ScrollView>
       <View
@@ -222,7 +247,7 @@ const index = () => {
               }}
               key={index}
             >
-              {/* View show profileName and Date  */}
+              {/* View show profileName and Date */}
               <View
                 style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
               >
@@ -230,7 +255,6 @@ const index = () => {
                   style={{ width: 60, height: 60, borderRadius: 30 }}
                   source={{ uri: item?.user?.profileImage }}
                 />
-
                 <View style={{ flexDirection: "column", gap: 2 }}>
                   <Text style={{ fontSize: 15, fontWeight: "600" }}>
                     {item?.user?.name}
@@ -252,7 +276,7 @@ const index = () => {
                   </Text>
                 </View>
               </View>
-              {/* View show 3 dots and delete  */}
+              {/* View show 3 dots and delete */}
               <View
                 style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
               >
@@ -271,13 +295,12 @@ const index = () => {
                     </TouchableOpacity>
                   </View>
                 )}
-
                 <TouchableOpacity onPress={() => handleRemovePress(item._id)}>
                   <FontAwesome name="remove" size={24} color="black" />
                 </TouchableOpacity>
               </View>
             </View>
-            {/* Description Artical and see more  */}
+            {/* Description Article and see more */}
             <View
               style={{ marginTop: 10, marginHorizontal: 10, marginBottom: 12 }}
             >
@@ -289,7 +312,7 @@ const index = () => {
               </Text>
               {!showfullText && (
                 <Pressable onPress={toggleShowFullText}>
-                  <Text style={{ color: "blue" }}>See more</Text>
+                  <Text style={{ color: "#2690c9" }}>See more</Text>
                 </Pressable>
               )}
             </View>
@@ -298,10 +321,10 @@ const index = () => {
               style={{ width: "100%", height: 240 }}
               source={{ uri: item?.imageUrl }}
             />
-            {/* Length Like  */}
-            {item?.likes?.length > 0 && (
-              <>
-                <View style={{ flexDirection: "row" }}>
+            {/* Length Like */}
+            {(item?.likes?.length > 0 || item?.comments?.length > 0) && (
+              <View style={{ flexDirection: "row" }}>
+                {item?.likes?.length > 0 && (
                   <View
                     style={{
                       padding: 10,
@@ -313,6 +336,8 @@ const index = () => {
                     <SimpleLineIcons name="like" size={16} color="#0072b1" />
                     <Text style={{ color: "gray" }}>{item?.likes?.length}</Text>
                   </View>
+                )}
+                {item?.comments?.length > 0 && (
                   <View
                     style={{
                       padding: 10,
@@ -321,13 +346,13 @@ const index = () => {
                       gap: 6,
                     }}
                   >
-                    <FontAwesome5 name="comment" size={24} color="gray" />
+                    <FontAwesome5 name="comment" size={17} color="#0072b1" />
                     <Text style={{ color: "gray" }}>
                       {item?.comments?.length}
                     </Text>
                   </View>
-                </View>
-              </>
+                )}
+              </View>
             )}
 
             <View
@@ -345,7 +370,7 @@ const index = () => {
                 marginVertical: 10,
               }}
             >
-              {/* Handle Like  */}
+              {/* Handle Like */}
               <Pressable onPress={() => handleLikePost(item?._id)}>
                 <AntDesign
                   style={{ textAlign: "center" }}
@@ -371,7 +396,7 @@ const index = () => {
                   Like
                 </Text>
               </Pressable>
-              {/* Handle Comment  */}
+              {/* Handle Comment */}
               <Pressable onPress={() => handleToggleComments(item._id)}>
                 <FontAwesome
                   name="comment-o"
@@ -397,7 +422,7 @@ const index = () => {
                   Comment
                 </Text>
               </Pressable>
-              {/* Handle Repost  */}
+              {/* Handle Repost */}
               <Pressable>
                 <AntDesign
                   style={{ textAlign: "center" }}
@@ -416,7 +441,7 @@ const index = () => {
                   Repost
                 </Text>
               </Pressable>
-              {/* Handle Send  */}
+              {/* Handle Send */}
               <Pressable>
                 <Feather name="send" size={20} color="gray" />
                 <Text style={{ marginTop: 2, fontSize: 12, color: "gray" }}>
@@ -433,85 +458,94 @@ const index = () => {
                   gap: 4,
                 }}
               >
-                {/* View Comment User  */}
-                <View
-                  style={{
-                    flexDirection: "row",
-                    // gap: 10,
-                    justifyContent: "flex-start",
-                    alignItems: "flex-start",
-                  }}
-                >
-                  <Image
+                {/* View Comment User */}
+                {item.comments.map((comment, index) => (
+                  <View
+                    key={index}
                     style={{
-                      width: 45,
-                      height: 45,
+                      flexDirection: "row",
+                      // gap: 10,
+                      backgroundColor: "#dfe6e9",
+                      justifyContent: "flex-start",
+                      alignItems: "flex-start",
+                      padding: 7,
                       borderRadius: 30,
-                      marginRight: 5,
-                      paddingRight: 10,
                     }}
-                    source={{ uri: item?.user?.profileImage }}
-                  />
-                  <View style={{ flexDirection: "column", gap: 2 }}>
-                    <Text style={{ fontSize: 15, fontWeight: "600" }}>
-                      {item?.user?.name}
-                    </Text>
-                    <Text
-                      numberOfLines={1}
-                      ellipsizeMode="tail"
+                  >
+                    <Image
                       style={{
-                        width: 280,
-                        color: "gray",
-                        backgroundColor: "#f5f6fa",
-                        fontSize: 15,
-                        fontWeight: "400",
-                        // padding: 15,
-                        borderRadius: 20,
+                        width: 45,
+                        height: 45,
+                        borderRadius: 30,
+                        marginRight: 5,
+                        marginLeft: 5,
+                        paddingRight: 13,
+                        marginTop: 9,
                       }}
-                    >
-                      My yext text
-                    </Text>
-                    {/* <Text style={{ color: "gray" }}>
-                    {moment(item.createdAt).format("MMMM Do YYYY")}
-                  </Text> */}
-                    <View
-                      style={{ flexDirection: "row", marginTop: 5, gap: 2 }}
-                    >
-                      <Text
-                        numberOfLines={1}
-                        ellipsizeMode="tail"
-                        style={{
-                          color: "blue",
-                          fontSize: 13,
-                          fontWeight: "400",
-                        }}
-                      >
-                        Like
+                      source={{ uri: comment.profileImage }}
+                    />
+                    <View style={{ flexDirection: "column", gap: 2 }}>
+                      <Text style={{ fontSize: 15, fontWeight: "600" }}>
+                        {comment.name}
                       </Text>
                       <Text
                         numberOfLines={1}
                         ellipsizeMode="tail"
                         style={{
-                          color: "blue",
-                          fontSize: 13,
+                          width: 280,
+                          color: "gray",
+                          // backgroundColor: "#f5f6fa",
+                          fontSize: 15,
                           fontWeight: "400",
-                          marginLeft: 10,
+                          borderRadius: 20,
                         }}
                       >
-                        Reply
+                        {comment.text}
                       </Text>
+                      <View
+                        style={{ flexDirection: "row", marginTop: 5, gap: 2 }}
+                      >
+                        <Text
+                          numberOfLines={1}
+                          ellipsizeMode="tail"
+                          style={{
+                            color: "blue",
+                            fontSize: 13,
+                            fontWeight: "400",
+                          }}
+                        >
+                          Like
+                        </Text>
+                        <Text
+                          numberOfLines={1}
+                          ellipsizeMode="tail"
+                          style={{
+                            color: "blue",
+                            fontSize: 13,
+                            fontWeight: "400",
+                            marginLeft: 10,
+                          }}
+                        >
+                          Reply
+                        </Text>
+                      </View>
                     </View>
                   </View>
-                </View>
+                ))}
                 <View
                   style={{
                     flexDirection: "row",
                     alignItems: "center",
-                    gap: 10,
+                    gap: 5,
                   }}
                 >
                   <Pressable>
-                    <Feather name="camera" size={24} color="black" />
+                    <Feather
+                      style={{ marginLeft: 5 }}
+                      name="camera"
+                      size={24}
+                      color="black"
+                    />
                   </Pressable>
                   {/* TextInput */}
                   <Pressable
@@ -533,8 +567,9 @@ const index = () => {
                         user?.name ? `Comment as ${user.name}` : "Comment as"
                       }
                       style={{ marginLeft: 9 }}
+                      value={description}
+                      onChangeText={(text) => setDescription(text)}
                     />
-
                     <MaterialIcons
                       onPress={handleEmojiPress}
                       style={{ marginRight: 10 }}
@@ -552,8 +587,13 @@ const index = () => {
                     )}
                   </Pressable>
                   {/* Navigation to chat */}
-                  <Pressable onPress={() => router.push("/home/chat")}>
-                    <Ionicons name="send" size={24} color="blue" />
+                  <Pressable onPress={() => handleCommentPost(item._id)}>
+                    <Ionicons
+                      style={{ marginRight: 9 }}
+                      name="send"
+                      size={24}
+                      color="blue"
+                    />
                   </Pressable>
                 </View>
               </View>
