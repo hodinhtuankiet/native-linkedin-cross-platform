@@ -53,8 +53,8 @@ const login = () => {
       AsyncStorage.setItem("authToken", token);
       router.replace("/(tab)/home");
     } catch (error) {
-      console.error("Login failed:", error);
-      Alert.alert("Login failed", "An error occurred while logging in");
+      // console.error("Login failed:", error);
+      Alert.alert("Login failed", "Your email or password is incorrect!");
     }
   };
   return (
