@@ -150,7 +150,7 @@ const profile = () => {
               <>
                 <TextInput
                   placeholder="enter your description"
-                  value={userDescription}
+                  value={user?.userDescription}
                   onChangeText={(text) => setUserDescription(text)}
                 />
 

@@ -5,6 +5,7 @@ import {
   ScrollView,
   Pressable,
   Image,
+  Button,
   TextInput,
   TouchableOpacity,
   Alert,
@@ -37,6 +38,8 @@ const index = () => {
   const [selectedLikePostId, setSelectedLikePostId] = useState(null);
 
   const [description, setDescription] = useState("");
+  const [editingDescription, setEditingDescription] = useState("");
+  // const [editedDescription, setEditedDescription] = useState("");
 
   //AsyncStorage fetch userid and set userid
   useEffect(() => {
@@ -93,7 +96,9 @@ const index = () => {
   const toggleShowFullText = () => {
     setShowfullText(!showfullText);
   };
-
+  const handleDescriptionChange = (text, id) => {
+    setDescription(text);
+  };
   const handleRemovePress = (idPost) => {
     Alert.alert(
       "Delete Post",
@@ -150,6 +155,32 @@ const index = () => {
       console.log("Error liking/unliking the post", error);
     }
   };
+  const handleEditDescription = async (id) => {
+    try {
+      const response = await axios.put(
+        `${WHITELIST_DOMAINS}/profile/${id}/${userId}`,
+        { description }
+      );
+      if (response.status === 200 || response.status === 201) {
+        fetchAllPosts();
+        setEditingDescription(!editingDescription);
+      } else {
+        console.log("Unexpected status code:", response.status);
+      }
+    } catch (error) {
+      console.log("Error update on the post:", error);
+      if (error.response && error.response.status === 404) {
+        Alert.alert("Error", "You can only update your own post");
+      } else {
+        console.log("Server response:", error.response?.data);
+      }
+    }
+  };
+  const handleOpenTextDescription = async (id) => {
+    setEditingDescription(!editingDescription);
+    setSelectedPostId(id);
+    setShowMenu(!showMenu);
+  };
   const handleCommentPost = async (postId) => {
     try {
       const response = await axios.post(
@@ -177,8 +208,9 @@ const index = () => {
   const handleEmojiPress = () => {
     setShowEmojiSelector(!showEmojiSelector);
   };
-  const toggleMenu = () => {
+  const toggleMenu = (id) => {
     setShowMenu(!showMenu);
+    setSelectedPostId(id);
   };
 
   const handleEdit = () => {
@@ -276,16 +308,18 @@ const index = () => {
                   </Text>
                 </View>
               </View>
-              {/* View show 3 dots and delete */}
+              {/* View show 3 dots, edit, and delete */}
               <View
                 style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
               >
-                <TouchableOpacity onPress={toggleMenu}>
+                <TouchableOpacity onPress={() => toggleMenu(item._id)}>
                   <Entypo name="dots-three-vertical" size={20} color="black" />
                 </TouchableOpacity>
-                {showMenu && (
+                {showMenu && selectedPostId === item._id && (
                   <View style={style.menu}>
-                    <TouchableOpacity onPress={handleEdit}>
+                    <TouchableOpacity
+                      onPress={() => handleOpenTextDescription(item._id)}
+                    >
                       <Text style={style.menuItem}>
                         Update Description Post
                       </Text>
@@ -300,21 +334,57 @@ const index = () => {
                 </TouchableOpacity>
               </View>
             </View>
-            {/* Description Article and see more */}
             <View
               style={{ marginTop: 10, marginHorizontal: 10, marginBottom: 12 }}
             >
-              <Text
-                style={{ fontSize: 15 }}
-                numberOfLines={showfullText ? undefined : MAX_LINES}
-              >
-                {item?.description}
-              </Text>
-              {!showfullText && (
-                <Pressable onPress={toggleShowFullText}>
-                  <Text style={{ color: "#2690c9" }}>See more</Text>
-                </Pressable>
-              )}
+              <View>
+                {editingDescription && selectedPostId === item._id ? (
+                  <>
+                    <TextInput
+                      placeholder="Enter new description"
+                      value={description}
+                      multiline
+                      numberOfLines={3}
+                      onChangeText={handleDescriptionChange}
+                    />
+
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-around",
+                        marginTop: 7,
+                      }}
+                    >
+                      <Button
+                        onPress={() => handleEditDescription(item._id)}
+                        title="Save"
+                      />
+                      <Button
+                        onPress={() =>
+                          setEditingDescription(!editingDescription)
+                        }
+                        title="No"
+                      />
+                    </View>
+                  </>
+                ) : (
+                  <Text
+                    style={{ fontSize: 15 }}
+                    numberOfLines={showfullText ? undefined : MAX_LINES}
+                  >
+                    {item?.description}
+                  </Text>
+                )}
+              </View>
+              {/* Conditionally render editable text input or normal text */}
+              {/* Render 'See more' option if not in edit mode */}
+              {!showfullText &&
+                editingDescription !== item._id &&
+                !editingDescription && (
+                  <Pressable onPress={() => toggleShowFullText()}>
+                    <Text style={{ color: "#2690c9" }}>See more</Text>
+                  </Pressable>
+                )}
             </View>
 
             <Image
@@ -452,7 +522,6 @@ const index = () => {
             {selectedPostId === item._id && showComments && (
               <View
                 style={{
-                  // padding: 10,
                   flexDirection: "column",
                   alignItems: "center",
                   gap: 4,
@@ -464,7 +533,6 @@ const index = () => {
                     key={index}
                     style={{
                       flexDirection: "row",
-                      // gap: 10,
                       backgroundColor: "#dfe6e9",
                       justifyContent: "flex-start",
                       alignItems: "flex-start",
@@ -494,7 +562,6 @@ const index = () => {
                         style={{
                           width: 280,
                           color: "gray",
-                          // backgroundColor: "#f5f6fa",
                           fontSize: 15,
                           fontWeight: "400",
                           borderRadius: 20,
@@ -502,9 +569,7 @@ const index = () => {
                       >
                         {comment.text}
                       </Text>
-                      <View
-                        style={{ flexDirection: "row", marginTop: 5, gap: 2 }}
-                      >
+                      <View style={{ flexDirection: "row", gap: 2 }}>
                         <Text
                           numberOfLines={1}
                           ellipsizeMode="tail"

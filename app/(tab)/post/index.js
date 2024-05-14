@@ -81,6 +81,8 @@ const index = () => {
 
       console.log("post created", response.data);
       if (response.status === 201) {
+        setDescription("");
+        setImage("");
         router.replace("/(tab)/home");
       }
     } catch (error) {
