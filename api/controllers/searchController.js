@@ -1,13 +1,16 @@
 import Post from "../models/post.js";
 
 import mongoose from "mongoose";
+import User from "../models/users.js";
 
-const searchPost = async (req, res, next) => {
+const searchPost = async (req, res) => {
   try {
-    const postName = req.params.name;
-    // Find the post by name
-    const post = await Post.findOne({ name: postName });
-
+    // Find the post by description or user name
+    const { description, name } = req.body;
+    const post = await Post.findOne({
+      $or: [{ description: description }, { "user.name": name }],
+    });
+    z;
     if (!post) {
       return res.status(404).json({ error: "Post not found" });
     }

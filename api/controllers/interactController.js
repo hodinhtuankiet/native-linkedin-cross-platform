@@ -51,7 +51,9 @@ const updateDescription = async (req, res, next) => {
     }
 
     // Thực hiện cập nhật mô tả của người dùng và kiểm tra xem cập nhật có thành công hay không
-    const updatedUser = await Post.findByIdAndUpdate(postId, { description });
+    const updatedUser = await Post.findByIdAndUpdate(postId, {
+      description,
+    });
 
     if (!updatedUser) {
       // Nếu không tìm thấy người dùng, trả về lỗi

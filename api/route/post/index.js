@@ -19,6 +19,6 @@ Router.use("/profile", interactRoute);
 
 Router.use("/deletePost", handlePostRoute);
 
-Router.use("/search", searchPostRoute);
+Router.use("/searchPost", searchPostRoute);
 
 export const POST_APIs = Router;
