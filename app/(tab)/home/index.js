@@ -20,6 +20,7 @@ import { AntDesign } from "@expo/vector-icons";
 import moment from "moment";
 import { useRouter } from "expo-router";
 import { jwtDecode } from "jwt-decode";
+import { useNavigation } from "@react-navigation/native";
 import "core-js/stable/atob";
 import { WHITELIST_DOMAINS } from "../../../utils/constant";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -40,6 +41,7 @@ const index = () => {
   const [description, setDescription] = useState("");
   const [editingDescription, setEditingDescription] = useState("");
   // const [editedDescription, setEditedDescription] = useState("");
+  const navigation = useNavigation();
 
   //AsyncStorage fetch userid and set userid
   useEffect(() => {
@@ -283,10 +285,18 @@ const index = () => {
               <View
                 style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
               >
-                <Image
-                  style={{ width: 60, height: 60, borderRadius: 30 }}
-                  source={{ uri: item?.user?.profileImage }}
-                />
+                <Pressable
+                  onPress={() =>
+                    navigation.navigate("profileAnother", {
+                      recepientId: item.user._id,
+                    })
+                  }
+                >
+                  <Image
+                    style={{ width: 60, height: 60, borderRadius: 30 }}
+                    source={{ uri: item?.user?.profileImage }}
+                  />
+                </Pressable>
                 <View style={{ flexDirection: "column", gap: 2 }}>
                   <Text style={{ fontSize: 15, fontWeight: "600" }}>
                     {item?.user?.name}

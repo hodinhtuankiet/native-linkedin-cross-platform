@@ -8,9 +8,14 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 const IP_ADDRESS = "http://192.168.1.11:3000";
+import { useRouter } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
 
 const UserProfile = ({ item, userId }) => {
   const [connectionSent, setConnectionSent] = useState(false);
+  const router = useRouter();
+  const navigation = useNavigation();
+
   const sendConnectionRequest = async (currentUserId, selectedUserId) => {
     try {
       const response = await fetch(`${IP_ADDRESS}/connection-request`, {
@@ -42,24 +47,32 @@ const UserProfile = ({ item, userId }) => {
         width: (Dimensions.get("window").width - 80) / 2,
       }}
     >
-      <View style={{ justifyContent: "center", alignItems: "center" }}>
-        <Image
-          style={{
-            width: 90,
-            height: 90,
-            borderRadius: 45,
-            resizeMode: "cover",
-          }}
-          source={{ uri: item?.profileImage }}
-        />
-      </View>
+      <Pressable
+        onPress={() =>
+          navigation.navigate("profileAnother", {
+            recepientId: item._id,
+          })
+        }
+      >
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <Image
+            style={{
+              width: 90,
+              height: 90,
+              borderRadius: 45,
+              resizeMode: "cover",
+            }}
+            source={{ uri: item?.profileImage }}
+          />
+        </View>
+      </Pressable>
 
       <View style={{ marginTop: 10 }}>
         <Text style={{ textAlign: "center", fontSize: 16, fontWeight: "600" }}>
           {item?.name}
         </Text>
         <Text style={{ textAlign: "center", marginLeft: 1, marginTop: 2 }}>
-          Engineer Graduate | Linkedin member
+          Engineer Graduate Linkedin member
         </Text>
       </View>
 

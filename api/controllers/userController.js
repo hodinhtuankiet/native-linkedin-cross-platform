@@ -47,8 +47,21 @@ const findIdByUserId = async (req, res, next) => {
     res.status(500).json({ message: "Error retrieving users" });
   }
 };
+const userDescription = async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+    const { userDescription } = req.body;
 
+    await User.findByIdAndUpdate(userId, { userDescription });
+
+    res.status(200).json({ message: "User profile updated successfully" });
+  } catch (error) {
+    console.log("Error updating user Profile", error);
+    res.status(500).json({ message: "Error updating user profile" });
+  }
+};
 export const userController = {
   findIdByProfile,
   findIdByUserId,
+  userDescription,
 };

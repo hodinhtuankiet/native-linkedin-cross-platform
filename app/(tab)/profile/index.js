@@ -126,7 +126,13 @@ const profile = () => {
         </View>
 
         <Image
-          style={{ width: "100%", height: 130 }}
+          style={{
+            width: "100%",
+            height: 130,
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
           source={{
             uri: "https://media.istockphoto.com/id/937025430/photo/abstract-defocused-blue-soft-background.jpg?b=1&s=612x612&w=0&k=20&c=FwJnRNxkX_lZKImOoJbo5VsgZPCMNiODdsRsggJqejA=",
           }}
@@ -137,19 +143,29 @@ const profile = () => {
             style={{ width: 120, height: 120, borderRadius: 60 }}
             source={{ uri: user?.profileImage }}
           />
+          <Pressable onPress={() => setIsEditing(!isEditing)}>
+            <Text>
+              {user?.userDescription ? (
+                <AntDesign name="edit" size={24} color="black" />
+              ) : (
+                <AntDesign name="pluscircleo" size={24} color="black" />
+              )}
+            </Text>
+          </Pressable>
         </View>
 
         <View style={{ marginTop: 80, marginHorizontal: 10 }}>
-          <Text style={{ fontSize: 17, fontWeight: "bold" }}>{user?.name}</Text>
-          <Pressable onPress={() => setIsEditing(!isEditing)}>
-            <Text>{user?.userDescription ? "Edit" : "Add Bio"}</Text>
-          </Pressable>
+          <Text
+            style={{ fontSize: 17, fontWeight: "bold", alignItems: "center" }}
+          >
+            {user?.name}
+          </Text>
 
-          <View>
+          <View style={{ textAlign: "center" }}>
             {isEditing ? (
               <>
                 <TextInput
-                  placeholder="enter your description"
+                  placeholder="Enter your description"
                   value={user?.userDescription}
                   onChangeText={(text) => setUserDescription(text)}
                 />
@@ -266,8 +282,24 @@ const profile = () => {
           </View>
         </View>
 
-        <Pressable onPress={logout}>
-          <Text>Logout</Text>
+        <Pressable
+          onPress={logout}
+          style={{
+            marginHorizontal: 10,
+            marginTop: 10,
+            paddingVertical: 10, // Thêm khoảng cách phía trên và dưới để nút có kích thước giống button
+            paddingHorizontal: 20, // Thêm khoảng cách phía trái và phải để nút có kích thước giống button
+            backgroundColor: "white", // Đặt màu nền cho nút
+            borderWidth: 2, // Độ dày của viền
+            borderColor: "grey", // Màu viền
+            borderRadius: 20, // Bo tròn viền
+            justifyContent: "center", // Căn giữa theo chiều dọc
+            alignItems: "center", // Căn giữa theo chiều ngang
+          }}
+        >
+          <Text style={{ fontSize: 17, fontWeight: "bold", color: "black" }}>
+            Logout
+          </Text>
         </Pressable>
       </View>
     </ScrollView>
