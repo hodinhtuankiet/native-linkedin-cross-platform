@@ -22,27 +22,36 @@ import {
 import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
 import { WHITELIST_DOMAINS } from "../../../utils/constant";
+import { FlatList, SafeAreaView, ActivityIndicator } from "react-native";
+import { Imagee } from "@rneui/themed";
 
-const profile = () => {
+const Profile = () => {
   const [userId, setUserId] = useState("");
   const [user, setUser] = useState();
   const router = useRouter();
   const [userDescription, setUserDescription] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const BASE_URI = "https://source.unsplash.com/random?sig=";
+
   useEffect(() => {
     const fetchUser = async () => {
       const token = await AsyncStorage.getItem("authToken");
-      const decodedToken = jwtDecode(token);
-      const userId = decodedToken.userId;
-      setUserId(userId);
+      if (token) {
+        const decodedToken = jwtDecode(token);
+        const userId = decodedToken.userId;
+        setUserId(userId);
+      }
     };
 
     fetchUser();
   }, []);
+
   useEffect(() => {
     if (userId) {
       fetchUserProfile();
     }
   }, [userId]);
+
   const fetchUserProfile = async () => {
     try {
       const response = await axios.get(
@@ -50,11 +59,12 @@ const profile = () => {
       );
       const userData = response.data.user;
       setUser(userData);
+      setUserDescription(userData.userDescription); // Cập nhật userDescription từ user
     } catch (error) {
       console.log("error fetching user profile", error);
     }
   };
-  const [isEditing, setIsEditing] = useState(false);
+
   const handleSaveDescription = async () => {
     try {
       const response = await axios.put(
@@ -66,16 +76,17 @@ const profile = () => {
 
       if (response.status === 200) {
         await fetchUserProfile();
-
         setIsEditing(false);
       }
     } catch (error) {
       console.log("Error saving user description", error);
     }
   };
+
   const logout = () => {
     clearAuthToken();
   };
+
   const clearAuthToken = async () => {
     await AsyncStorage.removeItem("authToken");
     console.log("auth token cleared");
@@ -143,30 +154,33 @@ const profile = () => {
             style={{ width: 120, height: 120, borderRadius: 60 }}
             source={{ uri: user?.profileImage }}
           />
-          <Pressable onPress={() => setIsEditing(!isEditing)}>
-            <Text>
-              {user?.userDescription ? (
-                <AntDesign name="edit" size={24} color="black" />
-              ) : (
-                <AntDesign name="pluscircleo" size={24} color="black" />
-              )}
-            </Text>
-          </Pressable>
         </View>
+        <Pressable
+          style={{ marginLeft: 88, marginTop: 45, marginHorizontal: 10 }}
+          onPress={() => setIsEditing(!isEditing)}
+        >
+          <Text>
+            {user?.userDescription ? (
+              <AntDesign name="edit" size={24} color="black" />
+            ) : (
+              <AntDesign name="pluscircleo" size={24} color="black" />
+            )}
+          </Text>
+        </Pressable>
 
-        <View style={{ marginTop: 80, marginHorizontal: 10 }}>
+        <View style={{ marginTop: 5, marginHorizontal: 10 }}>
           <Text
             style={{ fontSize: 17, fontWeight: "bold", alignItems: "center" }}
           >
             {user?.name}
           </Text>
 
-          <View style={{ textAlign: "center" }}>
+          <View style={{ textAlign: "center", marginTop: 5 }}>
             {isEditing ? (
               <>
                 <TextInput
                   placeholder="Enter your description"
-                  value={user?.userDescription}
+                  value={userDescription} // Đổi từ user?.userDescription sang userDescription
                   onChangeText={(text) => setUserDescription(text)}
                 />
 
@@ -266,7 +280,7 @@ const profile = () => {
             <Feather name="search" size={24} color="black" />
             <View style={{ marginLeft: 7 }}>
               <Text style={{ fontSize: 15, fontWeight: "600" }}>
-                45 post appearenced
+                45 post appearances
               </Text>
               <Text
                 style={{
@@ -289,16 +303,16 @@ const profile = () => {
             marginTop: 10,
             paddingVertical: 10, // Thêm khoảng cách phía trên và dưới để nút có kích thước giống button
             paddingHorizontal: 20, // Thêm khoảng cách phía trái và phải để nút có kích thước giống button
-            backgroundColor: "white", // Đặt màu nền cho nút
+            backgroundColor: "rgba(90, 154, 230, 1)", // Đặt màu nền cho nút
             borderWidth: 2, // Độ dày của viền
-            borderColor: "grey", // Màu viền
+            borderColor: "rgba(90, 154, 230, 1)", // Màu viền
             borderRadius: 20, // Bo tròn viền
             justifyContent: "center", // Căn giữa theo chiều dọc
             alignItems: "center", // Căn giữa theo chiều ngang
           }}
         >
-          <Text style={{ fontSize: 17, fontWeight: "bold", color: "black" }}>
-            Logout
+          <Text style={{ fontSize: 17, fontWeight: "bold", color: "white" }}>
+            LOGOUT
           </Text>
         </Pressable>
       </View>
@@ -306,6 +320,6 @@ const profile = () => {
   );
 };
 
-export default profile;
+export default Profile;
 
 const styles = StyleSheet.create({});
