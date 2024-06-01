@@ -91,6 +91,57 @@ const createNewCommentPost = async (req, res, next) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+const replyCommentPost = async (req, res, next) => {
+  const postId = req.params.postId;
+  const commentId = req.params.commentId;
+  const userId = req.params.userId;
+
+  const { description } = req.body;
+
+  try {
+    // Tìm bài viết
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    // Tìm người dùng
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Tìm comment trong bài viết
+    const comment = post.comments.id(commentId);
+    if (!comment) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+
+    // Tạo replyComment
+    const replyComment = {
+      user: userId, // Gán ID của người dùng vào comment
+      text: description,
+      name: user.name, // Thêm tên người dùng vào comment
+      profileImage: user.profileImage, // Thêm ảnh đại diện của người dùng vào comment
+      createdAt: new Date(), // Thêm thời gian tạo
+      likes: [], // Khởi tạo mảng likes rỗng
+    };
+
+    // Thêm reply vào comment
+    comment.replies.push(replyComment);
+
+    // Lưu bài viết
+    await post.save();
+
+    // Trả về phản hồi thành công
+    res
+      .status(201)
+      .json({ message: "Reply created successfully", replyComment });
+  } catch (error) {
+    next(error); // Truyền lỗi tới middleware xử lý lỗi
+  }
+};
+
 const searchPost = async (req, res, next) => {};
 export const postController = {
   createNewPost,
@@ -98,4 +149,5 @@ export const postController = {
   createNewCommentPost,
   showAllComments,
   searchPost,
+  replyCommentPost,
 };

@@ -11,6 +11,8 @@ Router.use("/all", postRoute);
 
 Router.use("/createComment", postRoute);
 
+Router.use("/replyComment", postRoute);
+
 Router.use("/allComment", handlePostRoute);
 
 Router.use("/like", interactRoute);
