@@ -32,6 +32,8 @@ const index = () => {
   const [posts, setPosts] = useState([]);
 
   const [showMenu, setShowMenu] = useState(false);
+  const [openReply, setOpenReply] = useState(false);
+  const [replyTo, setReplyTo] = useState(null);
 
   const [showEmojiSelector, setShowEmojiSelector] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -98,7 +100,7 @@ const index = () => {
   const toggleShowFullText = () => {
     setShowfullText(!showfullText);
   };
-  const handleDescriptionChange = (text, id) => {
+  const handleDescriptionChange = (text) => {
     setDescription(text);
   };
   const handleRemovePress = (idPost) => {
@@ -202,6 +204,25 @@ const index = () => {
       }
     }
   };
+  const handleReplyCommentPost = async (postId, commentId) => {
+    try {
+      const response = await axios.post(
+        `${WHITELIST_DOMAINS}/replyComment/${postId}/${commentId}/${userId}`,
+        { description }
+      );
+      if (response.status === 200 || response.status === 201) {
+        setDescription("");
+        fetchAllPosts();
+      } else {
+        console.log("Unexpected status code:", response.status);
+      }
+    } catch (error) {
+      console.log("Error reply commenting on the post:", error);
+      if (error.response) {
+        console.log("Server response:", error.response.data);
+      }
+    }
+  };
   const handleToggleComments = (postId) => {
     setShowComments(!showComments);
     setSelectedPostId(postId);
@@ -219,7 +240,10 @@ const index = () => {
     // Xử lý sự kiện khi người dùng chọn "Edit"
     console.log("Edit clicked");
   };
-
+  const handleReplyClick = (comment) => {
+    setReplyTo(comment);
+    setDescription(`@${comment.name} `);
+  };
   const handleDelete = () => {
     // Xử lý sự kiện khi người dùng chọn "Delete"
     console.log("Delete clicked");
@@ -330,12 +354,33 @@ const index = () => {
                     <TouchableOpacity
                       onPress={() => handleOpenTextDescription(item._id)}
                     >
-                      <Text style={style.menuItem}>
-                        Update Description Post
-                      </Text>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                          gap: 10,
+                          marginBottom: 10,
+                        }}
+                      >
+                        <MaterialIcons name="report" size={24} color="black" />
+                        <Text style={style.menuText}>Update</Text>
+                      </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={handleDelete}>
-                      <Text style={style.menuItem}>Report</Text>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                          gap: 10,
+                        }}
+                      >
+                        <FontAwesome5
+                          name="user-edit"
+                          size={22}
+                          color="black"
+                        />
+                        <Text style={style.menuText}>Report</Text>
+                      </View>
                     </TouchableOpacity>
                   </View>
                 )}
@@ -542,71 +587,205 @@ const index = () => {
                   <View
                     key={index}
                     style={{
-                      flexDirection: "row",
-                      backgroundColor: "#dfe6e9",
-                      justifyContent: "flex-start",
-                      alignItems: "flex-start",
-                      padding: 7,
-                      borderRadius: 30,
+                      flexDirection: "column",
+                      padding: 3,
+                      marginRight: 10,
+                      marginBottom: 0,
+                      marginTop: 0,
                     }}
                   >
-                    <Image
+                    <View
                       style={{
-                        width: 45,
-                        height: 45,
-                        borderRadius: 30,
-                        marginRight: 5,
-                        marginLeft: 5,
-                        paddingRight: 13,
-                        marginTop: 9,
+                        flexDirection: "row",
+                        alignItems: "flex-start",
                       }}
-                      source={{ uri: comment.profileImage }}
-                    />
-                    <View style={{ flexDirection: "column", gap: 2 }}>
-                      <Text style={{ fontSize: 15, fontWeight: "600" }}>
-                        {comment.name}
-                      </Text>
-                      <Text
-                        numberOfLines={1}
-                        ellipsizeMode="tail"
+                    >
+                      <Image
                         style={{
-                          width: 280,
-                          color: "gray",
-                          fontSize: 15,
-                          fontWeight: "400",
-                          borderRadius: 20,
+                          width: 45,
+                          height: 45,
+                          borderRadius: 30,
+                          marginRight: 5,
+                          marginLeft: 5,
+                          marginTop: 7,
+                        }}
+                        source={{ uri: comment.profileImage }}
+                      />
+                      <View
+                        style={{
+                          flexDirection: "column",
+                          gap: 1,
+                          backgroundColor: "#dfe6e9",
+                          borderRadius: 25,
+                          padding: 10,
+                          flex: 1,
                         }}
                       >
-                        {comment.text}
-                      </Text>
-                      <View style={{ flexDirection: "row", gap: 2 }}>
-                        <Text
-                          numberOfLines={1}
-                          ellipsizeMode="tail"
-                          style={{
-                            color: "blue",
-                            fontSize: 13,
-                            fontWeight: "400",
-                          }}
-                        >
-                          Like
+                        <Text style={{ fontSize: 15, fontWeight: "600" }}>
+                          {comment.name}
                         </Text>
                         <Text
                           numberOfLines={1}
                           ellipsizeMode="tail"
                           style={{
-                            color: "blue",
-                            fontSize: 13,
+                            width: 280,
+                            color: "gray",
+                            fontSize: 15,
                             fontWeight: "400",
-                            marginLeft: 10,
+                            borderRadius: 20,
                           }}
                         >
-                          Reply
+                          {comment.text}
                         </Text>
+                        <View style={{ flexDirection: "row", gap: 6 }}>
+                          <Text
+                            numberOfLines={1}
+                            ellipsizeMode="tail"
+                            style={{
+                              color: "gray",
+                              fontSize: 11,
+                              fontWeight: "400",
+                            }}
+                          >
+                            {moment(comment.createdAt).format("MMMM Do")}
+                          </Text>
+                          <Text
+                            numberOfLines={1}
+                            ellipsizeMode="tail"
+                            style={{
+                              color: "blue",
+                              fontSize: 13,
+                              fontWeight: "400",
+                            }}
+                          >
+                            Like
+                          </Text>
+                          <TouchableOpacity
+                            onPress={() => handleReplyClick(comment)}
+                          >
+                            <Text
+                              numberOfLines={1}
+                              ellipsizeMode="tail"
+                              style={{
+                                color: "blue",
+                                fontSize: 13,
+                                fontWeight: "400",
+                              }}
+                            >
+                              Reply
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
                       </View>
+
+                      <Entypo
+                        name="dots-three-vertical"
+                        size={20}
+                        color="black"
+                        style={{ marginTop: 30 }}
+                      />
                     </View>
+
+                    {/* Replies */}
+                    {comment.replies.length > 1 || openReply === false ? (
+                      <TouchableOpacity
+                        onPress={() => setOpenReply(!openReply)}
+                      >
+                        <View style={{ marginLeft: 60 }}>
+                          <Text>View all {comment.replies.length} Replies</Text>
+                        </View>
+                      </TouchableOpacity>
+                    ) : (
+                      comment.replies &&
+                      comment.replies.map((reply, replyIndex) => (
+                        <View
+                          key={replyIndex}
+                          style={{
+                            flexDirection: "row",
+                            alignItems: "flex-start",
+                            marginLeft: 55, // Adjusted to indent replies
+                            marginTop: 10,
+                          }}
+                        >
+                          <Image
+                            style={{
+                              width: 35, // Smaller size for reply profile image
+                              height: 35,
+                              borderRadius: 20,
+                              marginRight: 5,
+                              marginTop: 7,
+                            }}
+                            source={{ uri: reply.profileImage }}
+                          />
+                          <View
+                            style={{
+                              flexDirection: "column",
+                              backgroundColor: "#dfe6e9",
+                              borderRadius: 25,
+                              padding: 10,
+                            }}
+                          >
+                            <Text style={{ fontSize: 15, fontWeight: "600" }}>
+                              {reply.name}
+                            </Text>
+                            <Text
+                              numberOfLines={1}
+                              ellipsizeMode="tail"
+                              style={{
+                                color: "gray",
+                                fontSize: 15,
+                                fontWeight: "400",
+                                borderRadius: 20,
+                              }}
+                            >
+                              {reply.text}
+                            </Text>
+                            <View style={{ flexDirection: "row", gap: 6 }}>
+                              <Text
+                                numberOfLines={1}
+                                ellipsizeMode="tail"
+                                style={{
+                                  color: "gray",
+                                  fontSize: 11,
+                                  fontWeight: "400",
+                                }}
+                              >
+                                {moment(comment.createdAt).format("MMMM Do")}
+                              </Text>
+                              <Text
+                                numberOfLines={1}
+                                ellipsizeMode="tail"
+                                style={{
+                                  color: "blue",
+                                  fontSize: 13,
+                                  fontWeight: "400",
+                                }}
+                              >
+                                Like
+                              </Text>
+                              <TouchableOpacity
+                                onPress={() => handleReplyClick(comment)}
+                              >
+                                <Text
+                                  numberOfLines={1}
+                                  ellipsizeMode="tail"
+                                  style={{
+                                    color: "blue",
+                                    fontSize: 13,
+                                    fontWeight: "400",
+                                  }}
+                                >
+                                  Reply
+                                </Text>
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </View>
+                      ))
+                    )}
                   </View>
                 ))}
+
                 <View
                   style={{
                     flexDirection: "row",
@@ -622,8 +801,8 @@ const index = () => {
                       color="black"
                     />
                   </Pressable>
-                  {/* TextInput */}
-                  <Pressable
+                  {/* View Input Text  */}
+                  <View
                     style={{
                       flexDirection: "row",
                       alignItems: "center",
@@ -632,7 +811,6 @@ const index = () => {
                       backgroundColor: "white",
                       borderRadius: 23,
                       height: 40,
-                      width: 20,
                       flex: 1,
                       justifyContent: "space-between",
                     }}
@@ -641,9 +819,9 @@ const index = () => {
                       placeholder={
                         user?.name ? `Comment as ${user.name}` : "Comment as"
                       }
-                      style={{ marginLeft: 9 }}
+                      style={{ marginLeft: 9, flex: 1 }}
                       value={description}
-                      onChangeText={(text) => setDescription(text)}
+                      onChangeText={handleDescriptionChange}
                     />
                     <MaterialIcons
                       onPress={handleEmojiPress}
@@ -652,16 +830,17 @@ const index = () => {
                       size={24}
                       color="black"
                     />
+                    {/* Show Emoji  */}
                     {showEmojiSelector && (
                       <EmojiSelector
                         onEmojiSelected={(emoji) => {
-                          setMessage((prevMessage) => prevMessage + emoji);
+                          setDescription((prevMessage) => prevMessage + emoji);
                         }}
                         style={{ height: 250 }}
                       />
                     )}
-                  </Pressable>
-                  {/* Navigation to chat */}
+                  </View>
+
                   <Pressable onPress={() => handleCommentPost(item._id)}>
                     <Ionicons
                       style={{ marginRight: 9 }}
