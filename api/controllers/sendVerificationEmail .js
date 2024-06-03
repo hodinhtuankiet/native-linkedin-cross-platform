@@ -3,9 +3,11 @@ import nodemailer from "nodemailer";
 const sendVerificationEmail = async (email, verificationToken) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
+    host: "smtp.gmail.com",
+    secure: true,
     auth: {
-      user: "kiethdt.22ite@gmail.com",
-      pass: "ccmotjpzrpwpayja",
+      user: "kiethdt.22ite@vku.udn.vn",
+      pass: "dnaoxfiodneugwbf",
     },
   });
   const mailOptions = {

@@ -10,7 +10,7 @@ const createNew = async (req, res, next) => {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       console.log("Email already registered");
-      return res.status(400).json({ message: "Email already registered" });
+      return res.status(123).json({ message: "Email already registered" });
     }
     //create a new User
     const newUser = new User({
