@@ -48,10 +48,14 @@ const register = () => {
         setImage("");
       })
       .catch((error) => {
-        Alert.alert(
-          "Registration failed",
-          "An error occurred while registering"
-        );
+        if (error.status === 123) {
+          Alert.alert("Registration failed", "Email already registered");
+        } else {
+          Alert.alert(
+            "Registration failed",
+            "An error occurred while registering"
+          );
+        }
         console.log("registration failed", error);
       });
   };

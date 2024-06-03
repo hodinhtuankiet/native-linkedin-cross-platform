@@ -33,10 +33,11 @@ const index = () => {
 
   const [showMenu, setShowMenu] = useState(false);
   const [openReply, setOpenReply] = useState(false);
-  const [replyTo, setReplyTo] = useState(null);
+  const [replyTo, setReplyTo] = useState(false);
 
   const [showEmojiSelector, setShowEmojiSelector] = useState(false);
   const [showComments, setShowComments] = useState(false);
+  const [idComment, setIdComment] = useState(null);
   const [selectedPostId, setSelectedPostId] = useState(null);
   const [selectedLikePostId, setSelectedLikePostId] = useState(null);
 
@@ -46,14 +47,31 @@ const index = () => {
   const navigation = useNavigation();
 
   //AsyncStorage fetch userid and set userid
+  const clearAuthToken = async () => {
+    await AsyncStorage.removeItem("authToken");
+    console.log("auth token cleared");
+    router.replace("/(authenticate)/login");
+  };
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = await AsyncStorage.getItem("authToken");
+      if (!token) {
+        clearAuthToken();
+      }
+    };
+    checkToken();
+  }, []);
   useEffect(() => {
     const fetchUser = async () => {
       const token = await AsyncStorage.getItem("authToken");
-      const decodedToken = jwtDecode(token);
-      const userId = decodedToken.userId;
-      setUserId(userId);
+      if (typeof token === "string") {
+        const decodedToken = jwtDecode(token);
+        const userId = decodedToken.userId;
+        setUserId(userId);
+      } else {
+        console.log("Invalid token specified: must be a string");
+      }
     };
-
     fetchUser();
   }, []);
   useEffect(() => {
@@ -213,6 +231,7 @@ const index = () => {
       if (response.status === 200 || response.status === 201) {
         setDescription("");
         fetchAllPosts();
+        setReplyTo(!replyTo);
       } else {
         console.log("Unexpected status code:", response.status);
       }
@@ -241,8 +260,9 @@ const index = () => {
     console.log("Edit clicked");
   };
   const handleReplyClick = (comment) => {
-    setReplyTo(comment);
+    setReplyTo(!replyTo);
     setDescription(`@${comment.name} `);
+    setIdComment(comment._id);
   };
   const handleDelete = () => {
     // Xử lý sự kiện khi người dùng chọn "Delete"
@@ -687,7 +707,7 @@ const index = () => {
                     </View>
 
                     {/* Replies */}
-                    {comment.replies.length > 1 || openReply === false ? (
+                    {comment.replies.length > 1 && openReply === false ? (
                       <TouchableOpacity
                         onPress={() => setOpenReply(!openReply)}
                       >
@@ -841,7 +861,15 @@ const index = () => {
                     )}
                   </View>
 
-                  <Pressable onPress={() => handleCommentPost(item._id)}>
+                  <Pressable
+                    onPress={() => {
+                      if (replyTo) {
+                        handleReplyCommentPost(item._id, idComment);
+                      } else {
+                        handleCommentPost(item._id);
+                      }
+                    }}
+                  >
                     <Ionicons
                       style={{ marginRight: 9 }}
                       name="send"

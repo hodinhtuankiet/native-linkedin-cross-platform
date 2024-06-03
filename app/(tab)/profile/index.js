@@ -137,13 +137,7 @@ const Profile = () => {
         </View>
 
         <Image
-          style={{
-            width: "100%",
-            height: 130,
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
+          style={{ width: "100%", height: 130 }}
           source={{
             uri: "https://media.istockphoto.com/id/937025430/photo/abstract-defocused-blue-soft-background.jpg?b=1&s=612x612&w=0&k=20&c=FwJnRNxkX_lZKImOoJbo5VsgZPCMNiODdsRsggJqejA=",
           }}
@@ -156,19 +150,24 @@ const Profile = () => {
           />
         </View>
         <Pressable
-          style={{ marginLeft: 88, marginTop: 45, marginHorizontal: 10 }}
+          style={{
+            position: "absolute",
+            marginLeft: 110,
+            marginTop: 215,
+            marginHorizontal: 60,
+          }}
           onPress={() => setIsEditing(!isEditing)}
         >
           <Text>
             {user?.userDescription ? (
-              <AntDesign name="edit" size={24} color="black" />
+              <AntDesign name="edit" size={24} color="blue" />
             ) : (
               <AntDesign name="pluscircleo" size={24} color="black" />
             )}
           </Text>
         </Pressable>
 
-        <View style={{ marginTop: 5, marginHorizontal: 10 }}>
+        <View style={{ marginTop: 80, marginHorizontal: 10 }}>
           <Text
             style={{ fontSize: 17, fontWeight: "bold", alignItems: "center" }}
           >
