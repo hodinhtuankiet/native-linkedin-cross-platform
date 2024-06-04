@@ -57,7 +57,7 @@ const ChatMessage = () => {
             borderRadius: 20,
             paddingHorizontal: 10,
           }}
-          placeholder="Type Your message..."
+          placeholder="Type Your messages..."
         />
       </View>
       <Entypo name="camera" size={24} color="gray" />

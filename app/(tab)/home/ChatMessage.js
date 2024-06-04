@@ -361,10 +361,13 @@ const ChatMessage = () => {
             );
           }
           if (item.messageType === "image") {
-            const baseUrl = "/native/api/files/";
+            const baseUrl = "/api/";
             const imageUrl = item.imageUrl;
-            const filename = imageUrl.split("/").pop();
-            const source = { uri: baseUrl + filename };
+            const fixedImageUrl = imageUrl.replace(/\\/g, "/");
+            console.log("imageUrl", fixedImageUrl);
+            // const filename = imageUrl.split("/").pop();
+            const source = { uri: baseUrl + fixedImageUrl };
+            // console.log("source", source.uri);
             return (
               <Pressable
                 key={index}
@@ -390,7 +393,9 @@ const ChatMessage = () => {
               >
                 <View>
                   <Image
-                    source={source}
+                    source={{
+                      uri: source.uri,
+                    }}
                     style={{ width: 200, height: 200, borderRadius: 7 }}
                   />
                   <Text

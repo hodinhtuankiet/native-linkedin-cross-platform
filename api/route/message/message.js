@@ -10,12 +10,12 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     // Tạo một tên tệp duy nhất cho tệp được tải lên
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    const fileExtension = file.originalname.split(".").pop(); // Lấy phần mở rộng của tên tệp
-    cb(null, uniqueSuffix + "-" + file.originalname); // Sử dụng phần mở rộng để xác định loại dữ liệu của tệp tin
+    cb(null, uniqueSuffix + "-" + file.originalname);
   },
 });
 
 const upload = multer({ storage: storage });
+// const upload = multer({ dest: "file/" });
 
 Router.route("/").post(
   upload.single("imageFile"),
