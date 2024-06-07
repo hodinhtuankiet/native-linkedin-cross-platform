@@ -42,6 +42,7 @@ const index = () => {
   const [selectedLikePostId, setSelectedLikePostId] = useState(null);
 
   const [description, setDescription] = useState("");
+  const [descriptionArtical, setDescriptionArtical] = useState("");
   const [editingDescription, setEditingDescription] = useState("");
   // const [editedDescription, setEditedDescription] = useState("");
   const navigation = useNavigation();
@@ -229,8 +230,8 @@ const index = () => {
         { description }
       );
       if (response.status === 200 || response.status === 201) {
-        setDescription("");
         fetchAllPosts();
+        setDescription("");
         setReplyTo(!replyTo);
       } else {
         console.log("Unexpected status code:", response.status);
@@ -244,6 +245,7 @@ const index = () => {
   };
   const handleToggleComments = (postId) => {
     setShowComments(!showComments);
+    setDescription("");
     setSelectedPostId(postId);
   };
 
@@ -255,19 +257,12 @@ const index = () => {
     setSelectedPostId(id);
   };
 
-  const handleEdit = () => {
-    // Xử lý sự kiện khi người dùng chọn "Edit"
-    console.log("Edit clicked");
-  };
   const handleReplyClick = (comment) => {
     setReplyTo(!replyTo);
     setDescription(`@${comment.name} `);
     setIdComment(comment._id);
   };
-  const handleDelete = () => {
-    // Xử lý sự kiện khi người dùng chọn "Delete"
-    console.log("Delete clicked");
-  };
+
   const router = useRouter();
   // console.log(posts);
   return (
@@ -386,7 +381,7 @@ const index = () => {
                         <Text style={style.menuText}>Update</Text>
                       </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={handleDelete}>
+                    <TouchableOpacity>
                       <View
                         style={{
                           flexDirection: "row",

@@ -24,7 +24,7 @@ import "core-js/stable/atob";
 import { WHITELIST_DOMAINS } from "../../../utils/constant";
 import { FlatList, SafeAreaView, ActivityIndicator } from "react-native";
 import { Imagee } from "@rneui/themed";
-
+import { Title, Caption } from "react-native-paper";
 const Profile = () => {
   const [userId, setUserId] = useState("");
   const [user, setUser] = useState();
@@ -149,23 +149,6 @@ const Profile = () => {
             source={{ uri: user?.profileImage }}
           />
         </View>
-        <Pressable
-          style={{
-            position: "absolute",
-            marginLeft: 110,
-            marginTop: 215,
-            marginHorizontal: 60,
-          }}
-          onPress={() => setIsEditing(!isEditing)}
-        >
-          <Text>
-            {user?.userDescription ? (
-              <AntDesign name="edit" size={24} color="blue" />
-            ) : (
-              <AntDesign name="pluscircleo" size={24} color="black" />
-            )}
-          </Text>
-        </Pressable>
 
         <View style={{ marginTop: 80, marginHorizontal: 10 }}>
           <Text
@@ -197,6 +180,42 @@ const Profile = () => {
             Bengaluru, Karnataka, India
           </Text>
         </View>
+        <View style={styles.infoBoxWrapper}>
+          <View
+            style={[
+              styles.infoBox,
+              {
+                borderRightColor: "blue",
+                borderRightWidth: 2,
+              },
+            ]}
+          >
+            <Title>₹140.50</Title>
+            <Caption>Connections</Caption>
+          </View>
+          <View style={styles.infoBox}>
+            <Title>12</Title>
+            <Caption>Picture</Caption>
+          </View>
+        </View>
+
+        <Pressable
+          style={{
+            position: "absolute",
+            marginLeft: 110,
+            marginTop: 170,
+            marginHorizontal: 60,
+          }}
+          onPress={() => setIsEditing(!isEditing)}
+        >
+          <Text>
+            {user?.userDescription ? (
+              <AntDesign name="edit" size={24} color="blue" />
+            ) : (
+              <AntDesign name="pluscircleo" size={24} color="black" />
+            )}
+          </Text>
+        </Pressable>
 
         <View
           style={{
@@ -321,4 +340,19 @@ const Profile = () => {
 
 export default Profile;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  infoBoxWrapper: {
+    borderBottomColor: "blue",
+    borderBottomWidth: 2,
+    borderTopColor: "blue",
+    borderTopWidth: 2,
+    flexDirection: "row",
+    height: 90,
+    marginTop: 10,
+  },
+  infoBox: {
+    width: "50%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});

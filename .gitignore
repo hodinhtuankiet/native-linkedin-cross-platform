@@ -26,7 +26,7 @@ utils/constant.js
 # macOS
 .DS_Store
 *.pem
-
+.utils
 # local env files
 .env*.local
 

@@ -15,7 +15,7 @@ import "core-js/stable/atob";
 import { AntDesign } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import ChatMessage from "./ChatMessage";
-
+import Chatbot from "../app/(tab)/home/Chatbot";
 const UserChat = ({ item }) => {
   const [userId, setUserId] = useState("");
   const [messages, setMessages] = useState([]);
