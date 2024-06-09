@@ -18,8 +18,6 @@ const Index = () => {
   const router = useRouter();
   const [connectionRequests, setConnectionRequests] = useState([]);
 
-  const IP_ADDRESS = "http://192.168.1.11:3000";
-
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -84,7 +82,7 @@ const Index = () => {
         setConnectionRequests(connectionRequestsData);
       }
     } catch (error) {
-      console.log("error", error);
+      console.log("error fetchFriendRequests", error);
     }
   };
 

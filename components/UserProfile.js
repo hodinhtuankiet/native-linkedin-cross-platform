@@ -7,10 +7,9 @@ import {
   Pressable,
 } from "react-native";
 import React, { useState } from "react";
-const IP_ADDRESS = "http://192.168.1.11:3000";
 import { useRouter } from "expo-router";
 import { useNavigation } from "@react-navigation/native";
-
+import { WHITELIST_DOMAINS } from "../utils/constant";
 const UserProfile = ({ item, userId }) => {
   const [connectionSent, setConnectionSent] = useState(false);
   const router = useRouter();
@@ -18,7 +17,7 @@ const UserProfile = ({ item, userId }) => {
 
   const sendConnectionRequest = async (currentUserId, selectedUserId) => {
     try {
-      const response = await fetch(`${IP_ADDRESS}/connection-request`, {
+      const response = await fetch(`${WHITELIST_DOMAINS}/connection-request`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

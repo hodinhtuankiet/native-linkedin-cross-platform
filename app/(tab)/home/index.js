@@ -594,7 +594,7 @@ const index = () => {
                 style={{
                   flexDirection: "column",
                   alignItems: "center",
-                  gap: 4,
+                  gap: 1,
                 }}
               >
                 {/* View Comment User */}
@@ -607,12 +607,16 @@ const index = () => {
                       marginRight: 10,
                       marginBottom: 0,
                       marginTop: 0,
+                      // width: ,
                     }}
                   >
                     <View
                       style={{
                         flexDirection: "row",
-                        alignItems: "flex-start",
+                        // alignItems: "flex-start", // Đổi "left" thành "flex-start" vì "left" không phải là giá trị hợp lệ
+                        width: 350,
+                        alignSelf: "flex-end", // Thêm thuộc tính này để đặt thẻ phía bên phải
+                        // marginRight: "auto",
                       }}
                     >
                       <Image
@@ -701,7 +705,7 @@ const index = () => {
                       />
                     </View>
 
-                    {/* Replies */}
+                    {/* Replies Comment */}
                     {comment.replies.length > 1 && openReply === false ? (
                       <TouchableOpacity
                         onPress={() => setOpenReply(!openReply)}
