@@ -149,8 +149,8 @@ const ChatMessage = () => {
   };
   useEffect(() => {
     fetchMessages();
-  }, [userId, recepientId]);
-
+  }, [userId, recepientId, messages]);
+  // xử lí hover và message
   const handleSelectedMessage = (message) => {
     const isSelected = selectedMessages.includes(message._id);
     if (isSelected) {
@@ -364,7 +364,7 @@ const ChatMessage = () => {
             const baseUrl = "/api/";
             const imageUrl = item.imageUrl;
             const fixedImageUrl = imageUrl.replace(/\\/g, "/");
-            console.log("imageUrl", fixedImageUrl);
+            // console.log("imageUrl", fixedImageUrl);
             // const filename = imageUrl.split("/").pop();
             const source = { uri: baseUrl + fixedImageUrl };
             // console.log("source", source.uri);

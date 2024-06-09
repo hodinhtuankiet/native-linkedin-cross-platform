@@ -180,7 +180,7 @@ const Profile = () => {
             Bengaluru, Karnataka, India
           </Text>
         </View>
-        <View style={styles.infoBoxWrapper}>
+        {/* <View style={styles.infoBoxWrapper}>
           <View
             style={[
               styles.infoBox,
@@ -197,13 +197,13 @@ const Profile = () => {
             <Title>12</Title>
             <Caption>Picture</Caption>
           </View>
-        </View>
+        </View> */}
 
         <Pressable
           style={{
             position: "absolute",
-            marginLeft: 110,
-            marginTop: 170,
+            marginLeft: 100,
+            marginTop: 220,
             marginHorizontal: 60,
           }}
           onPress={() => setIsEditing(!isEditing)}
