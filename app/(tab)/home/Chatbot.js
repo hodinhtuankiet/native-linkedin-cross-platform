@@ -105,8 +105,6 @@ const Chatbot = () => {
       </View>
     </View>
   );
-
-  // Your component logic here
 };
 
 export default Chatbot;
