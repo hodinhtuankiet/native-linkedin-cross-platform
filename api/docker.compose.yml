@@ -1,0 +1,13 @@
+version: "3.7"
+
+services:
+  node:
+    container_name: node_server
+    build:
+      context: ../ # Đường dẫn đến thư mục native
+      dockerfile: ./docker/Dockerfile # Đường dẫn đến Dockerfile trong thư mục docker
+    ports:
+      - "3001:3000"
+    volumes:
+      - .:/app
+    command: yarn start
