@@ -10,7 +10,6 @@ const searchPost = async (req, res) => {
     const post = await Post.findOne({
       $or: [{ description: description }, { "user.name": name }],
     });
-    z;
     if (!post) {
       return res.status(404).json({ error: "Post not found" });
     }
