@@ -1,5 +1,7 @@
 ## APIS Social Network App
 ![bun drawio](https://github.com/hodinhtuankiet/native-linkedin/assets/120298180/e0854693-faf3-4abd-ab1f-3f46c9282a25)
+#### Flow code .
+![Image](https://github.com/user-attachments/assets/5eb4c664-ade6-49e2-9ef0-2e3b57d9e0a7)
 #### Managed communication between server and client using APIs.
 #### Developed APIs to facilitate messaging between users who have connected through the platform
 # Chat Message Through APIs 
