@@ -289,7 +289,7 @@ const index = () => {
             alignItems: "center",
             marginHorizontal: 7,
             gap: 10,
-            backgroundColor: "blue",
+            backgroundColor: "#fff",
             borderRadius: 16,
             height: 30,
             flex: 1,
@@ -341,7 +341,7 @@ const index = () => {
                     style={{
                       fontSize: 15,
                       fontWeight: "600",
-                      backgroundColor: "blue",
+                      backgroundColor: "#f2f2f2",
                     }}
                   >
                     {item?.user?.name}
@@ -369,7 +369,7 @@ const index = () => {
                   flexDirection: "row",
                   alignItems: "center",
                   gap: 10,
-                  backgroundColor: "blue",
+                  backgroundColor: "#f2f2f2",
                 }}
               >
                 <TouchableOpacity onPress={() => toggleMenu(item._id)}>
@@ -398,7 +398,7 @@ const index = () => {
                           flexDirection: "row",
                           alignItems: "center",
                           gap: 10,
-                          backgroundColor: "blue",
+                          backgroundColor: "#f2f2f2",
                         }}
                       >
                         <FontAwesome5
@@ -421,7 +421,7 @@ const index = () => {
                 marginTop: 10,
                 marginHorizontal: 10,
                 marginBottom: 12,
-                backgroundColor: "blue",
+                backgroundColor: "#f2f2f2",
               }}
             >
               <View>
@@ -689,7 +689,7 @@ const index = () => {
                             numberOfLines={1}
                             ellipsizeMode="tail"
                             style={{
-                              color: "blue",
+                              color: "#f2f2f2",
                               fontSize: 13,
                               fontWeight: "400",
                             }}
@@ -703,7 +703,7 @@ const index = () => {
                               numberOfLines={1}
                               ellipsizeMode="tail"
                               style={{
-                                color: "blue",
+                                color: "#f2f2f2",
                                 fontSize: 13,
                                 fontWeight: "400",
                               }}
@@ -792,7 +792,7 @@ const index = () => {
                                 numberOfLines={1}
                                 ellipsizeMode="tail"
                                 style={{
-                                  color: "blue",
+                                  color: "#f2f2f2",
                                   fontSize: 13,
                                   fontWeight: "400",
                                 }}
@@ -806,7 +806,7 @@ const index = () => {
                                   numberOfLines={1}
                                   ellipsizeMode="tail"
                                   style={{
-                                    color: "blue",
+                                    color: "#f2f2f2",
                                     fontSize: 13,
                                     fontWeight: "400",
                                   }}
@@ -890,7 +890,7 @@ const index = () => {
                       style={{ marginRight: 9 }}
                       name="send"
                       size={24}
-                      color="blue"
+                      color="#f2f2f2"
                     />
                   </Pressable>
                 </View>
