@@ -26,8 +26,6 @@ const Index = () => {
           const decodedToken = jwtDecode(token);
           const userId = decodedToken.userId;
           setUserId(userId);
-        } else {
-          console.log("No token found");
         }
       } catch (error) {
         console.error("Error fetching user:", error);

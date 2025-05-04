@@ -7,7 +7,7 @@ import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-
+import ChatWootView from "./ChatWootView";
 const ChatsScreen = () => {
   const [acceptedFriends, setAcceptedFriends] = useState([]);
   const [userId, setUserId] = useState("");
@@ -52,6 +52,8 @@ const ChatsScreen = () => {
           <UserChat key={index} item={item} />
         ))}
       </Pressable>
+            <ChatWootView />
+      
     </ScrollView>
   );
 };

@@ -10,6 +10,7 @@ import React, { useState } from "react";
 import { useRouter } from "expo-router";
 import { useNavigation } from "@react-navigation/native";
 import { WHITELIST_DOMAINS } from "../utils/constant";
+import ChatWootView from "./ChatWootView";
 const UserProfile = ({ item, userId }) => {
   const [connectionSent, setConnectionSent] = useState(false);
   const router = useRouter();
@@ -105,6 +106,8 @@ const UserProfile = ({ item, userId }) => {
             : "Connect"}
         </Text>
       </Pressable>
+   
+
     </View>
   );
 };

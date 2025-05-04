@@ -29,14 +29,9 @@ const ChatsScreen = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const token = await AsyncStorage.getItem("authToken");
-        if (token) {
-          const decodedToken = jwtDecode(token);
-          const userId = decodedToken.userId;
+        const userId = "660ab96344045a6b2043e92d";
           setUserId(userId);
-        } else {
-          console.log("No token found");
-        }
+      
       } catch (error) {
         console.error("Error fetching user:", error);
       }

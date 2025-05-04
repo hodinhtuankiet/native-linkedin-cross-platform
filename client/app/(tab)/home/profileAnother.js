@@ -287,6 +287,28 @@ const profile = () => {
       <Pressable onPress={logout}>
         <Text>Logout</Text>
       </Pressable>
+
+      <Pressable
+        //  onPress={logout}
+          onPress={() => router.push("/home/apply")}
+          style={{
+            marginHorizontal: 10,
+            marginTop: 10,
+            paddingVertical: 10, // Thêm khoảng cách phía trên và dưới để nút có kích thước giống button
+            paddingHorizontal: 20, // Thêm khoảng cách phía trái và phải để nút có kích thước giống button
+            backgroundColor: "rgb(235, 149, 37)", // Đặt màu nền cho nút
+            borderWidth: 2, // Độ dày của viền
+            borderColor: "rgba(90, 154, 230, 1)", // Màu viền
+            borderRadius: 20, // Bo tròn viền
+            justifyContent: "center", // Căn giữa theo chiều dọc
+            alignItems: "center", // Căn giữa theo chiều ngang
+          }}
+        >
+          <Text style={{ fontSize: 17, fontWeight: "bold", color: "white" }}>
+            APPLY
+          </Text>
+          
+        </Pressable>
     </View>
   );
 };

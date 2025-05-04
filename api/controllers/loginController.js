@@ -12,7 +12,6 @@ const secretKey = generateSecretKey();
 const createNew = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-
     //check if user exists already
     const user = await User.findOne({ email });
     if (!user) {

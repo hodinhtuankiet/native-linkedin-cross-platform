@@ -22,7 +22,7 @@ import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
 const IP_ADDRESS = "http://192.168.1.11:3000";
 import { WHITELIST_DOMAINS } from "../../../utils/constant";
-
+import ChatWootView from "../../../components/ChatWootView";
 const profile = () => {
   const [userId, setUserId] = useState("");
   const [user, setUser] = useState();
@@ -267,6 +267,8 @@ const profile = () => {
       <Pressable onPress={logout}>
         <Text>Logout</Text>
       </Pressable>
+      <ChatWootView />
+
     </View>
   );
 };

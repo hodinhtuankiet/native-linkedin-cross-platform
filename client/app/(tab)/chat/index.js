@@ -17,7 +17,7 @@ const IP_ADDRESS = "http://192.168.1.11:3000";
 import { Ionicons } from "@expo/vector-icons";
 import { WHITELIST_DOMAINS } from "../../../utils/constant";
 import { AntDesign } from "@expo/vector-icons";
-
+import ChatWootView from "../../../components/ChatWootView";
 const ChatsScreen = () => {
   const [acceptedFriends, setAcceptedFriends] = useState([]);
   const [userId, setUserId] = useState("");
@@ -101,6 +101,8 @@ const ChatsScreen = () => {
           <UserChat key={index} item={item} />
         ))}
       </Pressable>
+            <ChatWootView />
+      
     </ScrollView>
   );
 };

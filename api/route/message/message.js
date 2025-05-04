@@ -14,12 +14,34 @@ const storage = multer.diskStorage({
   },
 });
 
+const storagePDF = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // thư mục lưu file
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, uniqueSuffix + "-" + file.originalname);
+  },
+});
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype === "application/pdf") {
+    cb(null, true);
+  } else {
+    cb(new Error("Only PDF files are allowed!"), false);
+  }
+};
 const upload = multer({ storage: storage });
 // const upload = multer({ dest: "file/" });
+const uploadPDF = multer({ storage, fileFilter });
 
 Router.route("/").post(
   upload.single("imageFile"),
   messageController.sendMessage
+);
+
+Router.route("/apply").post(
+  uploadPDF.single("cv"),
+  messageController.sendPDF
 );
 
 Router.route("/:senderId/:recepientId").get(

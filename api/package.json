@@ -11,11 +11,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.9.0",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "esm": "^3.2.25",
     "express": "^4.19.1",
+    "form-data": "^4.0.2",
     "jsonwebtoken": "^9.0.2",
     "mime-types": "^2.1.35",
     "mongoose": "^8.2.3",

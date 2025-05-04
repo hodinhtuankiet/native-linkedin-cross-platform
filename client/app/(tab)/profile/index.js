@@ -25,6 +25,7 @@ import { WHITELIST_DOMAINS } from "../../../utils/constant";
 import { FlatList, SafeAreaView, ActivityIndicator } from "react-native";
 import { Imagee } from "@rneui/themed";
 import { Title, Caption } from "react-native-paper";
+import ChatWootView from "../../../components/ChatWootView";
 const Profile = () => {
   const [userId, setUserId] = useState("");
   const [user, setUser] = useState();
@@ -86,7 +87,9 @@ const Profile = () => {
   const logout = () => {
     clearAuthToken();
   };
-
+  const apply = () => {
+    clearAuthToken();
+  };
   const clearAuthToken = async () => {
     await AsyncStorage.removeItem("authToken");
     console.log("auth token cleared");
@@ -333,7 +336,11 @@ const Profile = () => {
             LOGOUT
           </Text>
         </Pressable>
+
+
       </View>
+      <ChatWootView />
+
     </ScrollView>
   );
 };

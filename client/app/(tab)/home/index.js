@@ -26,6 +26,7 @@ import { WHITELIST_DOMAINS } from "../../../utils/constant";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import EmojiSelector from "react-native-emoji-selector";
+
 const index = () => {
   const [userId, setUserId] = useState("");
   const [user, setUser] = useState();
@@ -48,11 +49,11 @@ const index = () => {
   const navigation = useNavigation();
 
   //AsyncStorage fetch userid and set userid
-  const clearAuthToken = async () => {
-    await AsyncStorage.removeItem("authToken");
-    console.log("auth token cleared");
-    router.replace("/(authenticate)/login");
-  };
+  // const clearAuthToken = async () => {
+  //   await AsyncStorage.removeItem("authToken");
+  //   console.log("auth token cleared");
+  //   router.replace("/(authenticate)/login");
+  // };
   useEffect(() => {
     const checkToken = async () => {
       const token = await AsyncStorage.getItem("authToken");
@@ -472,6 +473,27 @@ const index = () => {
                     <Text style={{ color: "#2690c9" }}>See more</Text>
                   </Pressable>
                 )}
+                  <Pressable
+                    onPress={() =>
+                      navigation.navigate("apply", {
+                        userId: userId,
+                        ownerId: item.user._id,
+                        postId: item._id
+                      })
+                    }
+                    style={{
+                      borderWidth: 1,
+                      borderColor: "#2690c9",
+                      paddingHorizontal: 12,
+                      paddingVertical: 6,
+                      borderRadius: 6,
+                      alignItems: "center"
+                    }}
+                  >
+                    <Text style={{ color: "#2690c9", fontWeight: "bold" }}>Apply</Text>
+                  </Pressable>
+
+                  
             </View>
 
             <Image
@@ -896,7 +918,10 @@ const index = () => {
                 </View>
               </View>
             )}
+         
           </View>
+         
+
         ))}
       </View>
     </ScrollView>

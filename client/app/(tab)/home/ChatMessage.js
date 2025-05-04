@@ -35,7 +35,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import { WHITELIST_DOMAINS } from "../../../utils/constant";
 import * as ImagePicker from "expo-image-picker";
-
+import ChatWootView from "../../../components/ChatWootView";
 const ChatMessage = () => {
   const [showEmojiSelector, setShowEmojiSelector] = useState(false);
   const [showInputText, setShowInputText] = useState(false);
@@ -57,14 +57,8 @@ const ChatMessage = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const token = await AsyncStorage.getItem("authToken");
-        if (token) {
-          const decodedToken = jwtDecode(token);
-          const userId = decodedToken.userId;
+          const userId = "660ab96344045a6b2043e92d";
           setUserId(userId);
-        } else {
-          console.log("No token found");
-        }
       } catch (error) {
         console.error("Error fetching user:", error);
       }
@@ -465,6 +459,7 @@ const ChatMessage = () => {
             marginHorizontal: 8,
           }}
         >
+          <Entypo name="file" size={24} color="gray" />
           <Entypo onPress={pickImage} name="camera" size={24} color="gray" />
           <Feather name="mic" size={24} color="gray" />
         </View>

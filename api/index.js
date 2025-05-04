@@ -19,7 +19,7 @@ const app = express();
 const port = 3000;
 
 const server = http.createServer(app); // Create an HTTP server using Express app
-
+app.use("/uploads", express.static("uploads"));
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

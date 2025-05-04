@@ -30,6 +30,15 @@ export default function Layout() {
           tabBarButton: () => null,
         }}
       />
+      <Stack.Screen
+        name="apply"
+        options={{
+          headerShown: false,
+          tabBarStyle: { display: "none" },
+          tabBarButton: () => null,
+        }}
+      />
     </Stack>
+    
   );
 }
