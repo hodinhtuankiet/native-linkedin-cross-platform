@@ -1,4 +1,5 @@
 import User from "../models/users.js";
+import CV from "../models/cv.js";
 
 const findIdByProfile = async (req, res, next) => {
   try {
@@ -47,6 +48,28 @@ const findIdByUserId = async (req, res, next) => {
     res.status(500).json({ message: "Error retrieving users" });
   }
 };
+const findCandidateByIdPost = async (req, res, next) => {
+  try {
+    const postId = req.params.postId; // Loại bỏ \n
+
+    // Nếu postId không phải là ObjectId hợp lệ, trả về lỗi
+    if (!postId) {
+      return res.status(400).json({ message: "Invalid postId format" });
+    }
+
+    const candidate = await CV.findOne({ postId: postId });
+
+    if (!candidate) {
+      return res.status(400).json({ message: "Candidate not found" });
+    }
+
+    res.status(200).json(candidate);
+  } catch (error) {
+    console.log("Error retrieving candidate", error);
+    res.status(500).json({ message: "Error retrieving candidate" });
+  }
+};
+
 const userDescription = async (req, res, next) => {
   try {
     const userId = req.params.userId;
@@ -64,4 +87,5 @@ export const userController = {
   findIdByProfile,
   findIdByUserId,
   userDescription,
+  findCandidateByIdPost,
 };

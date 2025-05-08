@@ -312,6 +312,7 @@ const index = () => {
 
       <View>
         {posts?.map((item, index) => (
+          // console.log(item),
           <View key={index}>
             <View
               style={{
@@ -323,7 +324,11 @@ const index = () => {
             >
               {/* View show profileName and Date */}
               <View
-                style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 10,
+                }}
               >
                 <Pressable
                   onPress={() =>
@@ -473,27 +478,54 @@ const index = () => {
                     <Text style={{ color: "#2690c9" }}>See more</Text>
                   </Pressable>
                 )}
-                  <Pressable
-                    onPress={() =>
-                      navigation.navigate("apply", {
-                        userId: userId,
-                        ownerId: item.user._id,
-                        postId: item._id
-                      })
-                    }
-                    style={{
-                      borderWidth: 1,
-                      borderColor: "#2690c9",
-                      paddingHorizontal: 12,
-                      paddingVertical: 6,
-                      borderRadius: 6,
-                      alignItems: "center"
-                    }}
-                  >
-                    <Text style={{ color: "#2690c9", fontWeight: "bold" }}>Apply</Text>
-                  </Pressable>
 
-                  
+              {item?.user?._id !== userId && (
+                <Pressable
+                  onPress={() =>
+                    navigation.navigate("apply", {
+                      userId: userId,
+                      ownerId: item.user._id,
+                      postId: item._id,
+                    })
+                  }
+                  style={{
+                    borderWidth: 1,
+                    borderColor: "#2690c9",
+                    paddingHorizontal: 12,
+                    paddingVertical: 6,
+                    borderRadius: 6,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={{ color: "#2690c9", fontWeight: "bold" }}>
+                    Apply
+                  </Text>
+                </Pressable>
+              )}
+
+              {item?.user?._id === userId && (
+                <Pressable
+                  onPress={() =>
+                    navigation.navigate("listCandidates", {
+                      postId: item._id,
+                    })
+                  }
+                  style={{
+                    borderWidth: 1,
+                    borderColor: "#2690c9",
+                    paddingHorizontal: 12,
+                    paddingVertical: 6,
+                    borderRadius: 6,
+                    alignItems: "center",
+                    backgroundColor: "orange", // Changed to orange background
+                    marginTop: 10, // Adjusted margin-top to 10 (or any value you prefer)
+                  }}
+                >
+                  <Text style={{ color: "#2690c9", fontWeight: "bold" }}>
+                    List Candidates Applied
+                  </Text>
+                </Pressable>
+              )}
             </View>
 
             <Image
@@ -918,10 +950,7 @@ const index = () => {
                 </View>
               </View>
             )}
-         
           </View>
-         
-
         ))}
       </View>
     </ScrollView>
