@@ -50,6 +50,21 @@ const Index = () => {
       //  fetchFriendRequests();
     }
   }, [userId]);
+  const callWebhookAnalyze = async (postId) => {
+    try {
+      const data = { postId };
+      const response = await axios.post(
+        `${WHITELIST_DOMAINS}/candidates/analyze`,
+        data
+      );
+      console.log("Webhook Response:", response.data);
+    } catch (error) {
+      console.error(
+        "Error calling webhook:",
+        error.response?.data || error.message
+      );
+    }
+  };
   const fetchCandidates = async () => {
     try {
       const response = await axios.get(
@@ -58,7 +73,7 @@ const Index = () => {
 
       // Kiểm tra dữ liệu trả về
       if (response.data) {
-        setUsers([response.data]); // Cập nhật dữ liệu vào state
+        setUsers(response.data); // Cập nhật dữ liệu vào state
         console.log("users", response.data);
       } else {
         console.log("No candidates found.");
@@ -74,7 +89,8 @@ const Index = () => {
   const callWebhook = async (postId) => {
     try {
       // Địa chỉ URL của Webhook
-      const webhookUrl = "https://your-webhook-url.com/endpoint";
+      const webhookUrl =
+        "https://n8n-hirenova.gdsc.dev/webhook-test/analys";
 
       // Dữ liệu gửi đi (nếu có)
       const data = {
@@ -94,22 +110,6 @@ const Index = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
-      <Pressable
-        onPress={() => router.push("/network/connections")}
-        style={{
-          marginTop: 10,
-          marginHorizontal: 10,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Text style={{ fontSize: 16, fontWeight: "600" }}>
-          Manage My Network
-        </Text>
-        <AntDesign name="arrowright" size={22} color="black" />
-      </Pressable>
-
       <View
         style={{ borderColor: "#E0E0E0", borderWidth: 2, marginVertical: 10 }}
       />
@@ -127,7 +127,7 @@ const Index = () => {
           onPress={() => callWebhook(postId)}
           style={{ fontSize: 16, fontWeight: "600" }}
         >
-          Duyệt ({connectionRequests?.length})
+          Lọc Và Gữi Email Tự Động
         </Text>
         <AntDesign name="arrowright" size={22} color="black" />
       </View>
@@ -145,13 +145,11 @@ const Index = () => {
         }}
       >
         {users.map((item) => {
-          const isPending = item?.connectionRequests?.includes(userId);
-
           return (
             <View
               key={item._id}
               style={{
-                width: (Dimensions.get("window").width - 64) / 2, // 2 cột, có khoảng cách
+                width: (Dimensions.get("window").width - 64) / 2,
                 borderRadius: 9,
                 borderColor: "#E0E0E0",
                 borderWidth: 1,
@@ -167,15 +165,16 @@ const Index = () => {
                   })
                 }
               >
+                {/* Nếu có ảnh hồ sơ, bạn có thể mở lại phần này */}
                 {/* <Image
-                  source={{ uri: item?.profileImage }}
-                  style={{
-                    width: 90,
-                    height: 90,
-                    borderRadius: 45,
-                    resizeMode: "cover",
-                  }}
-                /> */}
+          source={{ uri: item?.profileImage }}
+          style={{
+            width: 90,
+            height: 90,
+            borderRadius: 45,
+            resizeMode: "cover",
+          }}
+        /> */}
               </Pressable>
 
               <View style={{ marginTop: 10, alignItems: "center" }}>
@@ -189,14 +188,13 @@ const Index = () => {
                 </Text>
               </View>
 
-              <Pressable
-                // onPress={() => sendConnectionRequest(userId, item._id)}
-                // disabled={isPending}
+              {/* Hiển thị rate_cv */}
+              <View
                 style={{
                   marginTop: 10,
                   paddingHorizontal: 15,
                   paddingVertical: 6,
-                  borderColor: isPending ? "gray" : "#0072b1",
+                  borderColor: "#0072b1",
                   borderWidth: 1,
                   borderRadius: 25,
                 }}
@@ -204,12 +202,12 @@ const Index = () => {
                 <Text
                   style={{
                     fontWeight: "600",
-                    color: isPending ? "gray" : "#0072b1",
+                    color: "#0072b1",
                   }}
                 >
-                  {item?.rate_cv}
+                  CV Rating: {item?.rate_cv}
                 </Text>
-              </Pressable>
+              </View>
             </View>
           );
         })}

@@ -27,7 +27,7 @@ import { useRoute } from "@react-navigation/native";
 import EmojiSelector from "react-native-emoji-selector";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
-import { Platform } from 'react-native';
+import { Platform } from "react-native";
 import { jwtDecode } from "jwt-decode";
 
 const Index = () => {
@@ -36,9 +36,9 @@ const Index = () => {
   const [phone, setPhone] = useState("");
   const [cvFile, setCvFile] = useState(null);
   const [userId, setUserId] = useState(null);
-  
+
   const route = useRoute();
-  const { ownerId,postId } = route.params;
+  const { ownerId, postId } = route.params;
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -54,7 +54,6 @@ const Index = () => {
     };
     fetchUser();
   }, []);
-  
 
   const pickDocument = async () => {
     try {
@@ -63,21 +62,21 @@ const Index = () => {
         copyToCacheDirectory: true,
         multiple: false,
       });
-  
+
       console.log("Document picker result:", res);
-  
+
       if (res.canceled || !res.assets || res.assets.length === 0) {
         alert("Vui lòng chọn tệp hợp lệ (PDF)");
         return;
       }
-  
+
       const file = res.assets[0];
-  
+
       if (Platform.OS === "web") {
         // Trên web, uri là base64 data URI
         const response = await fetch(file.uri);
         const blob = await response.blob();
-  
+
         setCvFile({
           name: file.name,
           type: file.mimeType || "application/pdf",
@@ -96,29 +95,30 @@ const Index = () => {
       console.log("Error picking document:", err);
     }
   };
-  
-  
 
   const handleSubmitApplication = async () => {
     if (!fullName || !email || !phone || !cvFile) {
       alert("Vui lòng điền đầy đủ thông tin và chọn CV.");
       return;
     }
-  
+
     const formData = new FormData();
     formData.append("fullName", fullName);
     formData.append("email", email);
     formData.append("phone", phone);
-    formData.append("userId", userId);  // Thêm userId vào formData
-    formData.append("postId", postId);  // Thêm postId vào formData
+    formData.append("userId", userId); // Thêm userId vào formData
+    formData.append("postId", postId); // Thêm postId vào formData
     formData.append("ownerId", ownerId);
     // console.log("userId", userId);
     // console.log("postId", postId);
     // console.log("ownerId", ownerId);
     if (Platform.OS === "web") {
-      formData.append("cv", new File([cvFile.blob], cvFile.name, {
-        type: cvFile.type,
-      }));
+      formData.append(
+        "cv",
+        new File([cvFile.blob], cvFile.name, {
+          type: cvFile.type,
+        })
+      );
     } else {
       formData.append("cv", {
         uri: cvFile.uri,
@@ -126,7 +126,7 @@ const Index = () => {
         type: cvFile.type,
       });
     }
-  
+
     try {
       // const response = await fetch(`${WHITELIST_DOMAINS}/messages/apply/${userId}/${postId}/${ownerId}`, {
       //   method: "POST",
@@ -134,7 +134,7 @@ const Index = () => {
       // });
       const response = await fetch(`${WHITELIST_DOMAINS}/messages/apply`, {
         method: "POST",
-        body: formData,  // Gửi formData, bao gồm cả file và các tham số
+        body: formData, // Gửi formData, bao gồm cả file và các tham số
       });
       if (response.ok) {
         alert("Nộp đơn thành công!");
@@ -152,7 +152,6 @@ const Index = () => {
       alert("Gửi đơn thất bại!");
     }
   };
-  
 
   return (
     <ScrollView>
@@ -187,7 +186,11 @@ const Index = () => {
           </Text>
         )}
         <View style={{ marginTop: 15 }}>
-          <Button title="Nộp đơn" onPress={handleSubmitApplication} color="#0072b1" />
+          <Button
+            title="Nộp đơn"
+            onPress={handleSubmitApplication}
+            color="#0072b1"
+          />
         </View>
       </View>
     </ScrollView>

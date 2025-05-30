@@ -1,5 +1,7 @@
 import User from "../models/users.js";
 import CV from "../models/cv.js";
+const webhookBaseURL = process.env.WEBHOOK_URL_PORT;
+import "dotenv/config";
 
 const findIdByProfile = async (req, res, next) => {
   try {
@@ -57,13 +59,13 @@ const findCandidateByIdPost = async (req, res, next) => {
       return res.status(400).json({ message: "Invalid postId format" });
     }
 
-    const candidate = await CV.findOne({ postId: postId });
+    const candidates = await CV.find({ postId: postId });
 
-    if (!candidate) {
+    if (!candidates) {
       return res.status(400).json({ message: "Candidate not found" });
     }
 
-    res.status(200).json(candidate);
+    res.status(200).json(candidates);
   } catch (error) {
     console.log("Error retrieving candidate", error);
     res.status(500).json({ message: "Error retrieving candidate" });
@@ -83,9 +85,28 @@ const userDescription = async (req, res, next) => {
     res.status(500).json({ message: "Error updating user profile" });
   }
 };
+
+const analyzeCandidate = async (req, res, next) => {
+  const { postId } = req.body;
+  try {
+    const response = await axios.post(
+      // `${webhookBaseURL}/webhook-test/analys`,
+      `https://n8n-hirenova.gdsc.dev/webhook-test/analys`,
+      postId
+    );
+    console.log("Webhook response:", response.data);
+  } catch (error) {
+    console.error("Error sending file to webhook:", error);
+    return res
+      .status(500)
+      .json({ error: "Không thể gửi tệp tới webhook 222", webhookBaseURL });
+  }
+};
+
 export const userController = {
   findIdByProfile,
   findIdByUserId,
   userDescription,
   findCandidateByIdPost,
+  analyzeCandidate,
 };
